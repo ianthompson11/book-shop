@@ -126,6 +126,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"
 
-# PayPal Configuration
-PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
-PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
+# PayPal Configuration - payments
+PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET") #toma el PAYPAL_CLIENT_SECRET del env guardado en el terminal
