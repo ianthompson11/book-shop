@@ -1,44 +1,55 @@
 <!DOCTYPE html>
 {% load static %}
-<html>
+<html lang="es">
 
-    <head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PayPal JS SDK Standard Integration</title>
 
-        <meta charset="UTF-8" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Estilos opcionales personalizados -->
+  <style>
+    body {
+      background-image: url("{% static 'payments/book2.jpg' %}"); /* Cambia 'bg.jpg' por el nombre real */
+      background-size: cover;
+      background-position: center;
+    }
+      iframe:focus {
+      outline: none;
+    }
+  </style>
+</head>
 
-        <title>PayPal JS SDK Standard Integration</title>
+<body class="min-h-screen flex items-center justify-center bg-black bg-opacity-70">
 
-    </head>
+  <div class="max-w-md w-full p-6 bg-transparent bg-opacity-20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 text-white">
 
-    <body>
-        
-        <header>
-            <h1>Mi sitio de pagos</h1>
-        </header>
+    <header class="mb-6 text-center">
+      <h1 class="text-3xl font-bold">Pay with</h1>
+    </header>
 
-        <div id="paypal-button-container"></div>
+    <div id="paypal-button-container" class="mb-4"></div>
 
-        <p id="result-message"></p>
+    <p id="result-message" class="text-sm text-center mt-4"></p>
 
-        <!-- Initialize the JS-SDK -->
+  </div>
 
-        <script
+  <!-- PayPal SDK -->
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=test&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo,paylater,card"
+    data-sdk-integration-source="developer-studio">
+  </script>
 
-            src="https://www.paypal.com/sdk/js?client-id=test&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo,paylater,card"
+  <!-- Tu script JS -->
+  <script src="{% static 'payments/app.js' %}"></script>
 
-            data-sdk-integration-source="developer-studio"
-
-        ></script>
-
-        <script src="{% static 'payments/app.js' %}"></script>
-
-       
-
-    </body>
+</body>
 
 </html>
+
 
 
 
