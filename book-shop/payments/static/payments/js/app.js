@@ -10,6 +10,7 @@ const paypalButtons = window.paypal.Buttons({
     },
    async createOrder() {
         try {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
             const response = await fetch("/api/orders/", {
                 method: "POST",
                 headers: {
@@ -17,14 +18,8 @@ const paypalButtons = window.paypal.Buttons({
                 },
                 // use the "body" param to optionally pass additional order information
                 // like product ids and quantities
-                body: JSON.stringify({
-                    cart: [
-                        {
-                            id: "YOUR_PRODUCT_ID",
-                            quantity: "YOUR_PRODUCT_QUANTITY",
-                        },
-                    ],
-                }),
+                body: JSON.stringify({ cart }),
+
             });
 
             const orderData = await response.json();
@@ -82,10 +77,7 @@ const paypalButtons = window.paypal.Buttons({
                     orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
                     orderData?.purchase_units?.[0]?.payments
                         ?.authorizations?.[0];
-                resultMessage(
-                    `Transaction ${transaction.status}: ${transaction.id}<br>
-          <br>See console for all available details`
-                );
+                window.location.href = `/order-success/?transaction_id=${transaction.id}&status=${transaction.status}`;
                 console.log(
                     "Capture result",
                     orderData,

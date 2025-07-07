@@ -41,6 +41,32 @@ payments_controller = paypal_client.payments
 def create_order(request):
     if request.method == "POST":
         body = json.loads(request.body)
+        cart = body.get("cart", [])
+
+        # Convertimos los productos del frontend al formato que espera PayPal
+        items = []
+        total = 0
+
+        for product in cart:
+            name = product.get("name", "Item")
+            quantity = int(product.get("quantity", 1))
+            unit_amount = float(product.get("price", 0.0))
+
+            total += unit_amount * quantity
+
+            items.append(
+                Item(
+                    name=name,
+                    unit_amount=Money(currency_code="USD", value=str(unit_amount)),
+                    quantity=str(quantity),
+                    description=product.get("description", ""),
+                    sku=product.get("sku", ""),
+                    category=ItemCategory.PHYSICAL_GOODS,
+                )
+            )
+
+        total_str = str(round(total, 2))
+
         order = orders_controller.create_order({
             "body": OrderRequest(
                 intent=CheckoutPaymentIntent.CAPTURE,
@@ -48,21 +74,12 @@ def create_order(request):
                     PurchaseUnitRequest(
                         amount=AmountWithBreakdown(
                             currency_code="USD",
-                            value="100",
+                            value=total_str,
                             breakdown=AmountBreakdown(
-                                item_total=Money(currency_code="USD", value="100")
+                                item_total=Money(currency_code="USD", value=total_str)
                             ),
                         ),
-                        items=[
-                            Item(
-                                name="T-Shirt",
-                                unit_amount=Money(currency_code="USD", value="100"),
-                                quantity="1",
-                                description="Super Fresh Shirt",
-                                sku="sku01",
-                                category=ItemCategory.PHYSICAL_GOODS,
-                            )
-                        ],
+                        items=items,
                     )
                 ]
             )

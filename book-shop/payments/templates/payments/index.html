@@ -1,34 +1,12 @@
-<!DOCTYPE html>
+{% extends "payments/base.html" %}
 {% load static %}
-<html lang="es">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PayPal JS SDK Standard Integration</title>
+{% block title %}Pago con PayPal{% endblock %}
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Estilos opcionales personalizados -->
-  <style>
-    body {
-      background-image: url("{% static 'payments/book2.jpg' %}"); /* Cambia 'bg.jpg' por el nombre real */
-      background-size: cover;
-      background-position: center;
-    }
-      iframe:focus {
-      outline: none;
-    }
-  </style>
-</head>
-
-<body class="min-h-screen flex items-center justify-center bg-black bg-opacity-70">
-
-  <div class="max-w-md w-full p-6 bg-transparent bg-opacity-20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 text-white">
-
+{% block blurred_card %}
     <header class="mb-6 text-center">
-      <h1 class="text-3xl font-bold">Pay with</h1>
+      <h1 class="text-3xl font-bold">Pague con</h1>
     </header>
 
     <div id="paypal-button-container" class="mb-4"></div>
@@ -40,15 +18,15 @@
   <!-- PayPal SDK -->
   <script
     src="https://www.paypal.com/sdk/js?client-id=test&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo,paylater,card"
-    data-sdk-integration-source="developer-studio">
+    data-sdk-integration-source="developer-studio"
+    data-popups-disabled="true"> 
+    
   </script>
 
   <!-- Tu script JS -->
-  <script src="{% static 'payments/app.js' %}"></script>
+  <script src="{% static 'payments/js/app.js' %}"></script>
+{% endblock %}
 
-</body>
-
-</html>
 
 
 
