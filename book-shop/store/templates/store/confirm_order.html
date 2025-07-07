@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmación de Pedido</title>
+
+    <!-- Estilos básicos para mejorar visualmente la página -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .item {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Resumen del Carrito</h1>
+
+    <!-- Contenedor donde se insertará dinámicamente el contenido del carrito -->
+    <div id="cart-container"></div>
+
+    <!-- Script que carga los productos guardados en localStorage y los muestra -->
+    <script>
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];  // Obtiene el carrito del navegador
+        let total = 0;  // Acumulador del total a pagar
+
+        // Si el carrito está vacío, muestra un mensaje
+        if (cart.length === 0) {
+            document.getElementById("cart-container").innerHTML = "<p>Tu carrito está vacío.</p>";
+        } else {
+            // Recorre cada producto y lo agrega al HTML
+            cart.forEach(item => {
+                const div = document.createElement('div');
+                const itemTotal = item.quantity * item.price;
+                total += itemTotal;
+                div.classList.add("item");
+                div.innerHTML = `
+                    <p><strong>${item.name}</strong> - ${item.quantity} x $${item.price.toFixed(2)} = <strong>$${itemTotal.toFixed(2)}</strong></p>
+                    <p>${item.description}</p>
+                `;
+                document.getElementById("cart-container").appendChild(div);
+            });
+
+            // Muestra el total general al final
+            const totalDiv = document.createElement('div');
+            totalDiv.innerHTML = `<h3>Total a pagar: $${total.toFixed(2)}</h3>`;
+            document.getElementById("cart-container").appendChild(totalDiv);
+        }
+    </script>
+
+    <!-- Botón para enviar el pedido al backend -->
+    <button id="realizar-compra">Realizar Pedido</button>
+
+    <!-- Script que envía el carrito al backend vía fetch POST -->
+    <script>
+        document.getElementById("realizar-compra").addEventListener("click", () => {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            // Envía el carrito como JSON al endpoint /create-order/
+            fetch("/create-order/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ cart: cart })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    // Si todo sale bien, muestra alerta, limpia carrito y redirige
+                    alert("¡Pedido realizado con éxito! ID: " + data.order_id);
+                    localStorage.removeItem("cart");
+                    window.location.href = "/my-orders/";
+                } else {
+                    alert("Error: " + data.error);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+

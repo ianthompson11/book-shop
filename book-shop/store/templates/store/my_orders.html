@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mis Órdenes</title>
+</head>
+<body>
+
+    <h1>Mis Órdenes</h1>
+
+    <!-- Verifica si el usuario tiene órdenes -->
+    {% if orders %}
+
+        <!-- Itera sobre cada orden del usuario -->
+        {% for order in orders %}
+            <div>
+                <!-- Muestra el ID de la orden y su estado (ej: Pendiente, Completado) -->
+                <h3>Orden #{{ order.id }} - {{ order.get_status_display }}</h3>
+
+                <!-- Muestra la fecha de creación de la orden -->
+                <p>Fecha: {{ order.created_at }}</p>
+
+                <!-- Muestra el total de la orden -->
+                <p>Total: ${{ order.total }}</p>
+
+                <!-- Lista los productos comprados dentro de la orden -->
+                <ul>
+                    {% for item in order.items.all %}
+                        <li>{{ item.product.name }} - {{ item.quantity }} x ${{ item.price }}</li>
+                    {% endfor %}
+                </ul>
+
+                <hr>
+            </div>
+        {% endfor %}
+
+    <!-- Si no hay órdenes, se muestra este mensaje -->
+    {% else %}
+        <p>No tienes órdenes registradas.</p>
+    {% endif %}
+
+</body>
+</html>

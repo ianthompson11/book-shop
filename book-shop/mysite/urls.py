@@ -20,4 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")), #login
+    # Esta línea incluye todas las rutas definidas en la app "store"
+    # Hace que por ejemplo '/products/', '/confirm-order/' funcionen
+    path('', include('store.urls')),
 ]

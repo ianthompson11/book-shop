@@ -1,0 +1,42 @@
+{% load static %}
+<!-- Carga las etiquetas de archivos estáticos de Django (como JS, CSS, imágenes) -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Productos</title>
+
+    <!-- Enlaza el archivo JavaScript del carrito ubicado en static/store/cart.js -->
+    <script src="{% static 'store/cart.js' %}"></script>
+</head>
+<body>
+
+    <h1>Productos Disponibles</h1>
+
+    <!-- Recorre la lista de productos enviada desde la vista product_list -->
+    {% for product in products %}
+        <div>
+            <!-- Muestra el nombre del producto -->
+            <h2>{{ product.name }}</h2>
+
+            <!-- Muestra la descripción del producto -->
+            <p>{{ product.description }}</p>
+
+            <!-- Muestra el precio del producto -->
+            <p><strong>${{ product.price }}</strong></p>
+
+            <!-- Botón para agregar el producto al carrito -->
+            <!-- Al hacer clic, se llama a la función addToCart definida en cart.js -->
+            <button onclick="addToCart('{{ product.name }}', {{ product.price }}, '{{ product.description }}', '{{ product.sku }}')">
+                Agregar al carrito
+            </button>
+        </div>
+        <hr>
+    {% endfor %}
+
+    <!-- Botón que redirige a /confirm-order/ al hacer clic (definido también en cart.js) -->
+    <button id="confirmar-carrito">Confirmar Pedido</button>
+
+</body>
+</html>
+
