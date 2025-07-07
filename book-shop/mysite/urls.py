@@ -17,10 +17,24 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# IMPORTACIÓN PARA ARCHIVOS DE MEDIOS EN DESARROLLO
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
+    # Ruta del panel de administración
     path('admin/', admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")), #login
+
+    # Rutas de autenticación incluidas (login, logout, etc.)
+    path("accounts/", include("django.contrib.auth.urls")),  # login/logout
+
     # Esta línea incluye todas las rutas definidas en la app "store"
     # Hace que por ejemplo '/products/', '/confirm-order/' funcionen
     path('', include('store.urls')),
 ]
+
+# CONFIGURACIÓN PARA SERVIR ARCHIVOS DE IMAGEN (MEDIA) EN MODO DEBUG
+# Permite acceder a imágenes subidas desde el admin, como http://localhost:8000/media/products/imagen.jpg
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

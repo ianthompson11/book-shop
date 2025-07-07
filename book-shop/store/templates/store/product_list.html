@@ -1,42 +1,69 @@
 {% load static %}
-<!-- Carga las etiquetas de archivos estáticos de Django (como JS, CSS, imágenes) -->
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Productos</title>
 
-    <!-- Enlaza el archivo JavaScript del carrito ubicado en static/store/cart.js -->
+    <!-- Tailwind CSS vía CDN para aplicar estilos modernos sin archivos externos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Script que contiene la lógica del carrito (addToCart y redirección) -->
     <script src="{% static 'store/cart.js' %}"></script>
 </head>
-<body>
 
-    <h1>Productos Disponibles</h1>
+<!-- Fondo gris claro y fuente predeterminada para e-commerce -->
+<body class="bg-gray-100 font-sans">
 
-    <!-- Recorre la lista de productos enviada desde la vista product_list -->
-    {% for product in products %}
-        <div>
-            <!-- Muestra el nombre del producto -->
-            <h2>{{ product.name }}</h2>
+    <!-- Contenedor principal centrado con márgenes laterales y verticales -->
+    <div class="max-w-6xl mx-auto px-4 py-10">
 
-            <!-- Muestra la descripción del producto -->
-            <p>{{ product.description }}</p>
+        <!-- Título centrado, grande y con color gris oscuro -->
+        <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">
+            Tienda Bocaracá 🛒
+        </h1>
 
-            <!-- Muestra el precio del producto -->
-            <p><strong>${{ product.price }}</strong></p>
+        <!-- Grid adaptable: 1 columna en móvil, 2 en tablet, 3 en escritorio -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
-            <!-- Botón para agregar el producto al carrito -->
-            <!-- Al hacer clic, se llama a la función addToCart definida en cart.js -->
-            <button onclick="addToCart('{{ product.name }}', {{ product.price }}, '{{ product.description }}', '{{ product.sku }}')">
-                Agregar al carrito
+            <!-- Iteración sobre todos los productos pasados desde la vista -->
+            {% for product in products %}
+
+            <!-- Tarjeta de producto: fondo blanco, sombra, borde redondeado -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+
+                <!-- Imagen del producto, redondeada y centrada -->
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                     class="w-full h-40 object-cover rounded mb-4">
+
+                <!-- Nombre del producto como título -->
+                <h2 class="text-xl font-semibold mb-2">{{ product.name }}</h2>
+
+                <!-- Descripción del producto con texto gris -->
+                <p class="text-gray-700 mb-2">{{ product.description }}</p>
+
+                <!-- Precio del producto en verde y destacado -->
+                <p class="text-lg font-bold text-green-600 mb-4">${{ product.price }}</p>
+
+                <!-- Botón que agrega el producto al carrito llamando a la función JS -->
+                <button onclick="addToCart('{{ product.name }}', {{ product.price }}, '{{ product.description }}', '{{ product.sku }}')"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full">
+                    Agregar al carrito
+                </button>
+            </div>
+
+            {% endfor %}
+        </div>
+
+        <!-- Botón de confirmar carrito centrado abajo -->
+        <div class="text-center mt-10">
+            <button id="confirmar-carrito"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg">
+                Confirmar Pedido
             </button>
         </div>
-        <hr>
-    {% endfor %}
-
-    <!-- Botón que redirige a /confirm-order/ al hacer clic (definido también en cart.js) -->
-    <button id="confirmar-carrito">Confirmar Pedido</button>
+    </div>
 
 </body>
 </html>
+
 
