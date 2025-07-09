@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -25,32 +24,31 @@ SECRET_KEY = 'django-insecure-2#0+q#%l&tvgq2u)io)fa#f5&4qh+#5*8%2pe$fss$ugfchpk7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = []  # Añade hosts (ej. ['localhost', '127.0.0.1']) en producción
 
 # Application definition
-
 INSTALLED_APPS = [
-    #App internas
+    # Apps internas
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usuarios',  # esto es para la app de usuarios añadido por Jason 
-    # allauth apps # Hecho por JASON
+    'usuarios',  # App de usuarios añadida por Jason
+
+    # allauth apps
     'django.contrib.sites',
     'allauth',
-    'allauth.account', 
+    'allauth.account',
     'allauth.socialaccount',
 
-     # proveedores sociales
-    'allauth.socialaccount.providers.google', #JASON PARA GOOGLE
-    'allauth.socialaccount.providers.github', #JASON PARA GITHUB
-
+    # Proveedores sociales
+    'allauth.socialaccount.providers.google',  # Para Google
+    'allauth.socialaccount.providers.github',  # Para GitHub
 ]
-SITE_ID = 2  # 👈 Obligatorio para allauth  jason
+
+SITE_ID = 2  # Obligatorio para allauth
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -58,11 +56,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
-    # middleware de allauth:Hecho por JASON
-    'allauth.account.middleware.AccountMiddleware',
-
-
+    'allauth.account.middleware.AccountMiddleware',  # Middleware de allauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -72,7 +66,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates' , BASE_DIR / 'mysite'/'templates' ],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'mysite/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,10 +80,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -97,10 +88,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -116,50 +104,41 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = 'es'  # Consolidado aquí
+TIME_ZONE = 'America/New_York'  # Consolidado aquí
 USE_I18N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static",]
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-#Hecho por JASON
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # login normal
-    'allauth.account.auth_backends.AuthenticationBackend', # allauth
+USE_L10N = True
+LANGUAGES = (
+    ('es', 'Spanish'),
 )
 
-LOGIN_REDIRECT_URL = "/"
-#Agregado por Jason
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+# Static files
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static",]
 
-# Opciones útiles para allauth, puedes personalizar después
-ACCOUNT_EMAIL_VERIFICATION = "none"  # para verificar email luego ponerlo en mandatory por el momento none para porbar localmente
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Autenticación
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Login normal
+    'allauth.account.auth_backends.AuthenticationBackend',  # allauth
+)
+
+# Redirecciones
+LOGIN_REDIRECT_URL = '/home/'  # Redirige a la página principal tras login
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'  # Redirige a login tras logout
+# Opciones de allauth
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Para pruebas localmente
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_LOGOUT_ON_GET = False  # cerrar sesión con GET (opcional)
+ACCOUNT_LOGOUT_ON_GET = False  # Cierre de sesión con GET
 
 # Configuración de email (para recuperación de contraseña)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Para pruebas (muestra en consola)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Para pruebas
 
-#Esto es para que aparezca los bontones de google y github en el login de allauth
-#Esto habilita las conexiones con Google y GitHub.
+# Proveedores sociales
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
@@ -169,11 +148,3 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['user:email'],
     },
 }
-#tRADUACION
-LANGUAGE_CODE = 'es'
-TIME_ZONE = 'America/New_York'
-USE_I18N = True
-USE_L10N = True
-LANGUAGES = (
-    ('es', 'Spanish'),
-)

@@ -16,11 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from django.views.generic import RedirectView
+from django.contrib.auth.decorators import login_required
+
 urlpatterns = [
-    #path('', RedirectView.as_view(url='/accounts/login/', permanent=False)), #Esto redirige automáticamente / a /accounts/login/
+    path('', include('usuarios.urls')),  # Comenta esto temporalmente
+    path('user/panel/', TemplateView.as_view(template_name='user_panel.html'), name='user_panel'),
+    path('', RedirectView.as_view(url='/accounts/login/', permanent=False)),  # Redirige a login como punto de entrada
+    path('home/', login_required(TemplateView.as_view(template_name='home.html')), name='home'),  # Página principal protegida
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),   # URLs de django-allauth (registro, login, logout, social, etc)
-    #path('usuarios/', include('usuarios.urls')),  # incluye las URLs de la app de usuarios hecho por Jason
-    path('', include('usuarios.urls')),  # El index personalizado es la raíz
+    path('accounts/', include('allauth.urls')),   # URLs de django-allauth
 ]

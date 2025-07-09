@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +13,62 @@
 </head>
 <body>
     <div class="overlay"></div>
-    {% block content %}{% endblock %}
+
+    <!-- Encabezado fijo -->
+    <header class="header" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
+        <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #2c2f34; color: white;">
+            <!-- Navegación izquierda -->
+            <div class="nav-left" style="display: flex; align-items: center; gap: 20px;">
+                <a href="{% url 'home' %}" style="color: white; text-decoration: none; font-weight: bold;">Book Shop</a>
+                <a href="#" style="color: white; text-decoration: none;">Directorio</a>
+                <a href="#" style="color: white; text-decoration: none;">Buscar</a>
+            </div>
+
+            <!-- Usuario autenticado o login -->
+            <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
+                {% if user.is_authenticated %}
+                    <span class="user-info">{% trans "Bienvenido" %} {{ user.username }}</span>
+
+                    <!-- 🔽 Panel desplegable -->
+                    <div class="user-panel-dropdown" style="position: relative;">
+                        <a href="javascript:void(0)" class="btn-panel-toggle" style="color: white; text-decoration: none;">
+                            Panel de Usuario
+                        </a>
+                        <div id="userPanel" class="user-panel"
+                             style="position: absolute; right: 0; top: 100%; background: #111; color: white; width: 300px;
+                                    border-radius: 8px; overflow: hidden; max-height: 0; transition: max-height 0.5s ease;">
+                            <div style="padding: 20px; text-align: center;">
+                                <h2 style="font-size: 1.2rem; margin-bottom: 10px;">Panel del Usuario</h2>
+                                <p style="margin-bottom: 15px;">
+                                    Aquí puedes ver tu historial de compras<br>y estado de órdenes.
+                                </p>
+                                <!-- Contenido principal compensado por el header fijo -->
+                                <a href="/usuario/historial/" style="display: block; background: #4f46e5; color: white; padding: 8px 16px; margin: 8px auto; border-radius: 9999px; text-decoration: none; width: fit-content;">
+                                    Ver Historial de Compras
+                                </a>
+                                <a href="/usuario/ordenes/" style="display: block; background: #4f46e5; color: white; padding: 8px 16px; margin: 8px auto; border-radius: 9999px; text-decoration: none; width: fit-content;">
+                                    Ver Estado de Órdenes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'account_logout' %}" class="btn-logout" style="color: white; text-decoration: none;">
+                        {% trans "Cerrar Sesión" %}
+                    </a>
+                {% else %}
+                    <a href="{% url 'account_login' %}" style="color: white; text-decoration: none;">Iniciar sesión</a>
+                    <a href="{% url 'account_signup' %}" style="color: white; text-decoration: none;">Registrarse</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal compensado por el header fijo -->
+    <div class="main-content" style="padding-top: 150px;">
+        {% block content %}{% endblock %}
+    </div>
+
     <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

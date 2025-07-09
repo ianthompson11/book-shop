@@ -454,3 +454,58 @@ body {
 }
 
 
+/* Encabezado */
+.header {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Por encima del overlay */
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-right: 1rem;
+}
+
+.btn-logout,
+.btn-login,
+.btn-signup {
+    padding: 0.5rem 1.5rem;
+    background-color: #4a4aee;
+    border: none;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-logout:hover,
+.btn-login:hover,
+.btn-signup:hover {
+    background-color: #5a5aff;
+    transform: translateY(-2px);
+}
+
+/* Contenedor principal para el contenido */
+.main-content {
+    position: relative;
+    min-height: calc(100vh - 60px); /* Ajusta según la altura del header */
+    padding-top: 60px; /* Espacio para el header */
+    z-index: 900; /* Por encima del overlay si es necesario */
+}
