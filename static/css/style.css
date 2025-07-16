@@ -6,21 +6,21 @@
 }
 
 body {
-    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url('../img/3.jpg'); /* Ajustado correctamente */
+    background-image: url('../img/3.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     color: #fff;
+    min-height: 100vh; /* altura mínima pero permite expansión */
 }
 
 /* Contenedor principal */
 .container-form {
     width: 90%;
-    height: 90vh;
+    min-height: 90vh;
     display: flex;
     justify-content: space-around;
     /*position: relative;*/

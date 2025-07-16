@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}
+  {% if provider %}{% trans "Iniciar sesión mediante " %}{{ provider.name }}{% else %}{% trans "Iniciar sesión" %}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-form" style="background-color: #ffeb3b; padding: 20px;">
+    <div class="formulario" style="background-color: #212121; color: #ffffff; padding: 20px; border-radius: 10px; max-width: 450px; margin: 0 auto;">
+        <h2 style="color: #ffeb3b; text-align: center;">
+            {% if provider %}{% trans "Inicio de sesión mediante" %} {{ provider.name }}{% else %}{% trans "Iniciar sesión" %}{% endif %}
+        </h2>
+        <p style="text-align: center; color: #bbbbbb;">
+            {% if process == "connect" %}
+                {% blocktrans with provider.name as provider %}Se dispone a conectar una cuenta externa desde {{ provider }}.{% endblocktrans %}
+            {% else %}
+                {% blocktrans with provider.name as provider %}Se dispone a iniciar sesión usando una cuenta externa desde {{ provider }}.{% endblocktrans %}
+            {% endif %}
+        </p>
+
+        <form method="post" style="text-align: center;">
+            {% csrf_token %}
+            <button type="submit" style="background-color: #ffeb3b; color: #212121; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
+                {% trans "Continuar" %}
+            </button>
+        </form>
+
+        <p style="margin-top: 20px; text-align: center;">
+            <a href="{% url 'account_login' %}" style="color: #ffeb3b; text-decoration: underline;">{% trans "Volver al inicio de sesión" %}</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

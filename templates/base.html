@@ -14,7 +14,7 @@
 <body>
     <div class="overlay"></div>
 
-    {% if request.path != '/accounts/login/' and request.path != '/accounts/signup/' and request.path != '/accounts/password/reset/' and request.path != '/accounts/password/reset/done/' and request.path != '/accounts/logout/' and request.path != '/accounts/password/manual-reset/' %}
+    {% if request.path != '/accounts/login/' and request.path != '/accounts/signup/' and request.path != '/accounts/password/reset/' and request.path != '/accounts/password/reset/done/' and request.path != '/accounts/logout/' and request.path != '/accounts/password/manual-reset/' and request.path != '/accounts/google/login/' and request.path != '/accounts/github/login/' %}
     <!-- Encabezado fijo -->
     <header class="header" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
         <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #2c2f34; color: white;">
