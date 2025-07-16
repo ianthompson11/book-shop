@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test de productos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-50 p-8">
+
+<!-- Pega aquí el contenido del archivo productos.html -->
+<!-- Contenedor principal con animación de entrada -->
+<div class="max-w-2xl mx-auto mt-12 animate-slide-in">
+  <!-- Tarjeta con efecto de cristal y borde rojo -->
+  <div class="bg-white bg-opacity-80 backdrop-blur-md rounded-xl border-l-4 border-red-600 shadow-xl p-8 transform transition-all duration-300 hover:shadow-2xl">
+    
+    <!-- Cabecera con icono de advertencia -->
+    <div class="flex items-center mb-6">
+      <div class="flex-shrink-0 mr-4">
+        <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center animate-pulse-slow">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </div>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-800">Eliminar producto</h2>
+    </div>
+    
+    <!-- Información del producto a eliminar -->
+    <div class="mb-8 p-4 bg-red-50 rounded-lg border border-red-100">
+      <p class="text-gray-700 text-lg mb-2">¿Estás seguro que deseas eliminar:</p>
+      <div class="flex items-center">
+        <span class="text-xl font-bold text-red-600 animate-highlight">"{{ product.name }}"</span>
+        <span class="ml-2 text-red-500 animate-bounce-subtle">?</span>
+      </div>
+      <p class="mt-3 text-sm text-gray-500">Esta acción no se puede deshacer.</p>
+    </div>
+
+    <!-- Formulario con botones de acción -->
+    <form method="post" class="flex flex-col sm:flex-row gap-4">
+      {% csrf_token %}
+      
+      <!-- Botón de eliminar con efecto de temblor al hover -->
+      <button type="submit" class="delete-btn flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow transition-all duration-300 flex items-center justify-center group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:animate-shake" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Sí, eliminar
+      </button>
+      
+      <!-- Botón de cancelar -->
+      <a href="{% url 'product_detail' product.pk %}" class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg shadow transition-all duration-300 text-center flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Cancelar
+      </a>
+    </form>
+  </div>
+</div>
+
+<!-- Estilos y animaciones -->
+<style>
+  /* Animación de entrada deslizante */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.4s ease-out forwards;
+  }
+  
+  /* Animación de pulso lento para el icono */
+  @keyframes pulseSlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
+  
+  .animate-pulse-slow {
+    animation: pulseSlow 2s infinite;
+  }
+  
+  /* Animación de temblor para el icono del botón eliminar */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+  }
+  
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  /* Animación de rebote sutil para el signo de interrogación */
+  @keyframes bounceSlight {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  
+  .animate-bounce-subtle {
+    animation: bounceSlight 1.5s infinite;
+  }
+  
+  /* Animación de resaltado para el nombre del producto */
+  @keyframes highlight {
+    0%, 100% { text-shadow: 0 0 0 rgba(220, 38, 38, 0); }
+    50% { text-shadow: 0 0 5px rgba(220, 38, 38, 0.3); }
+  }
+  
+  .animate-highlight {
+    animation: highlight 2s infinite;
+  }
+  
+  /* Efecto de temblor al pasar el cursor sobre el botón eliminar */
+  .delete-btn:hover {
+    animation: shake 0.5s ease-in-out;
+  }
+</style>
+
+</body>
+</html>

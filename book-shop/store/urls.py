@@ -18,4 +18,8 @@ urlpatterns = [
 
     # Ruta para que el usuario autenticado vea su historial de órdenes
     path('my-orders/', views.my_orders, name='my_orders'),
+
+    path('cart/', views.cart_view, name='cart_view'),  # Vista del carrito visual
+
+
 ]

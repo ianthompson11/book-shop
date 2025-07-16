@@ -1,55 +1,63 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Productos</title>
 
-    <!-- Tailwind CSS vía CDN para aplicar estilos modernos sin archivos externos -->
+    <!-- Tailwind CSS desde CDN para estilos rápidos y profesionales -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Script que contiene la lógica del carrito (addToCart y redirección) -->
+    <!-- Script de carrito con control de login y almacenamiento local -->
     <script src="{% static 'store/cart.js' %}"></script>
 </head>
 
-<!-- Fondo gris claro y fuente predeterminada para e-commerce -->
-<body class="bg-gray-100 font-sans">
+<!-- Agrega un atributo al <body> para saber si el usuario ha iniciado sesión (usado por cart.js) -->
+<body class="bg-gray-100 font-sans" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
 
-    <!-- Incluye el menú de navegación -->
+    <!-- Incluye menú de navegación -->
     {% include 'store/navbar.html' %}
 
-    <!-- Contenedor principal centrado con márgenes laterales y verticales -->
+    <!-- Contenedor principal del contenido -->
     <div class="max-w-6xl mx-auto px-4 py-10">
 
-        <!-- Título centrado, grande y con color gris oscuro -->
+        <!-- Título llamativo con ícono de carrito -->
         <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">
             Tienda Bocaracá 🛒
         </h1>
 
-        <!-- Grid adaptable: 1 columna en móvil, 2 en tablet, 3 en escritorio -->
+        <!-- Contenedor de productos: grid responsive (1, 2 o 3 columnas) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
-            <!-- Iteración sobre todos los productos pasados desde la vista -->
+            <!-- Iteración de cada producto enviado desde la vista Django -->
             {% for product in products %}
 
-            <!-- Tarjeta de producto: fondo blanco, sombra, borde redondeado -->
-            <div class="bg-white shadow-md rounded-lg p-6">
+            <!-- Tarjeta de producto con sombra y padding -->
+            <div class="bg-white shadow-md rounded-lg p-6 transition transform hover:scale-105 duration-300">
 
-                <!-- Imagen del producto, redondeada y centrada -->
-                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                     class="w-full h-40 object-cover rounded mb-4">
+                <!-- Imagen del producto -->
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                         class="w-full h-40 object-cover rounded mb-4">
+                {% else %}
+                    <div class="w-full h-40 bg-gray-200 rounded mb-4 flex items-center justify-center text-gray-500">
+                        Sin imagen
+                    </div>
+                {% endif %}
 
-                <!-- Nombre del producto como título -->
+                <!-- Nombre del producto -->
                 <h2 class="text-xl font-semibold mb-2">{{ product.name }}</h2>
 
-                <!-- Descripción del producto con texto gris -->
+                <!-- Descripción breve -->
                 <p class="text-gray-700 mb-2">{{ product.description }}</p>
 
-                <!-- Precio del producto en verde y destacado -->
+                <!-- Precio destacado -->
                 <p class="text-lg font-bold text-green-600 mb-4">${{ product.price }}</p>
 
-                <!-- Botón que agrega el producto al carrito llamando a la función JS -->
-                <button onclick="addToCart('{{ product.name }}', {{ product.price }}, '{{ product.description }}', '{{ product.sku }}')"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full">
+                <!-- Botón para agregar producto al carrito -->
+                <button
+                    onclick="addToCart('{{ product.name }}', {{ product.price }}, '{{ product.description }}', '{{ product.sku }}')"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full shadow">
                     Agregar al carrito
                 </button>
             </div>
@@ -57,14 +65,27 @@
             {% endfor %}
         </div>
 
-        <!-- Botón de confirmar carrito centrado abajo -->
+        <!-- Botón para confirmar carrito -->
         <div class="text-center mt-10">
             <button id="confirmar-carrito"
-                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg">
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg shadow">
                 Confirmar Pedido
             </button>
         </div>
     </div>
+
+    <!-- Script para redirigir al resumen del carrito si el usuario hace clic -->
+    <script>
+        // Asocia el botón de confirmación con la redirección a /confirm-order/
+        document.getElementById("confirmar-carrito").addEventListener("click", () => {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if (cart.length === 0) {
+                alert("Tu carrito está vacío.");
+            } else {
+                window.location.href = "/confirm-order/";
+            }
+        });
+    </script>
 
 </body>
 </html>

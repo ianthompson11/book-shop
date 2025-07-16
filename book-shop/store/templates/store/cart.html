@@ -1,0 +1,189 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito de compras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="bg-gray-50">
+<!-- Incluye menú de navegación -->
+{% include 'store/navbar.html' %}
+
+<div class="max-w-7xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- 🛍️ Lista de productos en el carrito (2/3 del ancho) -->
+    <div class="md:col-span-2 space-y-6">
+        <h1 class="text-3xl font-bold mb-4">Carrito</h1>
+        <div id="cart-container" class="space-y-6"></div>
+    </div>
+
+    <!-- 🧾 Resumen del pedido (1/3 del ancho) -->
+    <div class="bg-white p-6 shadow-md rounded">
+        <h2 class="text-xl font-semibold mb-4">Resumen del pedido</h2>
+        <p id="total-items" class="text-sm text-gray-600 mb-2">Subtotal (0 productos):</p>
+        <p id="total-amount" class="text-2xl font-bold text-green-600 mb-4">$0.00</p>
+        <button id="checkout-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-4 w-full rounded">
+            Proceder al pago
+        </button>
+    </div>
+</div>
+
+<script>
+// Carga el carrito desde localStorage
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const cartContainer = document.getElementById("cart-container");
+const totalAmount = document.getElementById("total-amount");
+const totalItems = document.getElementById("total-items");
+
+/**
+ * Renderiza los productos en el carrito con sus controles
+ * y actualiza los totales basados en los checkbox marcados
+ */
+function updateCartDisplay() {
+    cartContainer.innerHTML = "";
+    let total = 0;
+    let totalCount = 0;
+
+    if (cart.length === 0) {
+        cartContainer.innerHTML = "<p class='text-gray-500'>Tu carrito está vacío.</p>";
+        totalAmount.innerText = "$0.00";
+        totalItems.innerText = "Subtotal (0 productos):";
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "flex bg-white p-4 rounded shadow-md";
+
+        itemDiv.innerHTML = `
+            <input type="checkbox" class="mr-4 mt-6 item-checkbox" data-index="${index}" checked>
+            <div class="flex-grow">
+                <h3 class="text-lg font-semibold">${item.name}</h3>
+                <p class="text-sm text-gray-600 mb-1">${item.description}</p>
+                <p class="text-sm text-green-600 font-bold mb-2">$${item.price.toFixed(2)}</p>
+                <div class="flex items-center space-x-2">
+                    <button onclick="decreaseQty(${index})" class="border px-2">-</button>
+                    <span>${item.quantity}</span>
+                    <button onclick="increaseQty(${index})" class="border px-2">+</button>
+                    <button onclick="removeItem(${index})" class="text-red-500 ml-4" title="Eliminar">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="text-sm text-right ml-4 whitespace-nowrap">
+                <p class="mb-2 font-medium">Subtotal: $${subtotal.toFixed(2)}</p>
+            </div>
+        `;
+
+        cartContainer.appendChild(itemDiv);
+    });
+
+    // Espera a que los elementos estén en el DOM para capturar los checkbox
+    setTimeout(() => {
+        const checkboxes = document.querySelectorAll(".item-checkbox");
+        checkboxes.forEach((checkbox, i) => {
+            if (checkbox.checked) {
+                const item = cart[i];
+                total += item.price * item.quantity;
+                totalCount += item.quantity;
+            }
+
+            // Cada vez que cambia un checkbox, actualiza totales
+            checkbox.addEventListener("change", updateTotalsFromCheckboxes);
+        });
+
+        totalAmount.innerText = `$${total.toFixed(2)}`;
+        totalItems.innerText = `Subtotal (${totalCount} producto${totalCount !== 1 ? 's' : ''}):`;
+        feather.replace();
+    }, 0);
+}
+
+/**
+ * Actualiza el total basado en los productos seleccionados (checkbox)
+ */
+function updateTotalsFromCheckboxes() {
+    let total = 0;
+    let totalCount = 0;
+    const checkboxes = document.querySelectorAll(".item-checkbox");
+
+    checkboxes.forEach((checkbox, i) => {
+        if (checkbox.checked) {
+            const item = cart[i];
+            total += item.price * item.quantity;
+            totalCount += item.quantity;
+        }
+    });
+
+    totalAmount.innerText = `$${total.toFixed(2)}`;
+    totalItems.innerText = `Subtotal (${totalCount} producto${totalCount !== 1 ? 's' : ''}):`;
+}
+
+/**
+ * Elimina un producto del carrito
+ */
+function removeItem(index) {
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+}
+
+/**
+ * Incrementa la cantidad de un producto
+ */
+function increaseQty(index) {
+    cart[index].quantity += 1;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+}
+
+/**
+ * Disminuye la cantidad o elimina el producto si es 1
+ */
+function decreaseQty(index) {
+    if (cart[index].quantity > 1) {
+        cart[index].quantity -= 1;
+    } else {
+        cart.splice(index, 1);
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+}
+
+document.getElementById("checkout-btn").addEventListener("click", () => {
+    // 🟨 Recolectar todos los checkboxes activos
+    const checkboxes = document.querySelectorAll("#cart-container input[type='checkbox']");
+    
+    const selectedItems = [];
+
+    checkboxes.forEach((checkbox, index) => {
+        if (checkbox.checked) {
+            selectedItems.push(cart[index]);  // ✅ Solo los productos marcados
+        }
+    });
+
+    // 🟥 Validación: que al menos un producto esté seleccionado
+    if (selectedItems.length === 0) {
+        alert("Por favor selecciona al menos un producto para continuar.");
+        return;
+    }
+
+    // 🟩 Guardar en localStorage solo los seleccionados
+    localStorage.setItem("cart_selected", JSON.stringify(selectedItems));
+
+    // 🔁 Redirigir al resumen del carrito
+    window.location.href = "/confirm-order/";
+});
+
+
+// Carga inicial
+updateCartDisplay();
+</script>
+
+</body>
+</html>

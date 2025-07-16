@@ -78,4 +78,14 @@ def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')  # Obtiene las órdenes más recientes del usuario
     return render(request, 'store/my_orders.html', {'orders': orders})  # Renderiza el historial en una plantilla
 
+# Vista que carga el HTML del carrito visual estilo Amazon
+def cart_view(request):
+    return render(request, 'store/cart.html')
+
+# ---------------------------------------------
+# Vista que muestra el nuevo carrito visual tipo Amazon
+# ---------------------------------------------
+def cart_view(request):
+    return render(request, 'store/cart.html')  # Renderiza cart.html
+
 
