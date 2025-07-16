@@ -16,7 +16,10 @@
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-gray-50 p-8">
+<body class="bg-gray-50 p-8" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+
+<!-- Include the navbar from store app -->
+{% include 'store/navbar.html' %}
 
 <!-- Pega aquí el contenido del archivo productos.html -->
 
@@ -243,6 +246,42 @@
   animation: fadeIn 0.5s ease-out forwards;
 }
 </style>
+
+<!-- Include cart JavaScript -->
+<script>
+// Cart functionality
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+/**
+ * Función para agregar productos al carrito
+ * Ya no requiere autenticación para agregar productos
+ */
+function addToCart(name, price, description, id) {
+    // Verifica si el producto ya está en el carrito usando el id
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ name, quantity: 1, price, description, id });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert("Producto agregado al carrito");
+
+    // Actualiza contador del navbar (si está presente)
+    const cartCount = document.getElementById("cart-count");
+    if (cartCount) {
+        cartCount.textContent = `(${cart.length})`;
+    }
+}
+</script>
+
+</body>
+</html>
+        cartCount.textContent = `(${cart.length})`;
+    }
+}
+</script>
 
 </body>
 </html>

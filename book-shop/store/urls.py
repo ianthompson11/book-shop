@@ -7,8 +7,8 @@ from . import views
 # Lista de rutas definidas para la app 'store'
 urlpatterns = [
 
-    # Ruta para mostrar los productos (vista principal de la tienda)
-    path('products/', views.product_list, name='product_list'),
+    # Redirect main products route to productos app
+    path('products/', views.products_redirect, name='products_redirect'),
 
     # Ruta para confirmar el contenido del carrito
     path('confirm-order/', views.confirm_order, name='confirm_order'),
@@ -21,5 +21,5 @@ urlpatterns = [
 
     path('cart/', views.cart_view, name='cart_view'),  # Vista del carrito visual
 
-
 ]
+

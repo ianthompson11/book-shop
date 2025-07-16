@@ -1,5 +1,5 @@
 # Importación de herramientas necesarias de Django
-from django.shortcuts import render, redirect  # Para renderizar templates HTML y redirigir URLs
+from django.shortcuts import render  # Para renderizar templates HTML
 from django.http import JsonResponse  # Para devolver respuestas JSON (APIs)
 from django.views.decorators.csrf import csrf_exempt  # Para permitir POST sin token CSRF (usado con JS)
 from django.contrib.auth.decorators import login_required  # Para proteger vistas que requieren login
@@ -12,13 +12,6 @@ import json  # Para decodificar el cuerpo de las peticiones JSON
 def product_list(request):
     products = Product.objects.all()  # Obtiene todos los productos de la base de datos
     return render(request, 'store/product_list.html', {'products': products})  # Los pasa al template para mostrarlos
-
-# -----------------------------------
-# Vista que redirige desde la ruta principal de productos
-# -----------------------------------
-def products_redirect(request):
-    """Redirige /products/ a la app de productos"""
-    return redirect('/productos/')
 
 # -----------------------------------
 # Vista que muestra el resumen del carrito
@@ -48,9 +41,9 @@ def create_order(request):
 
             # Itera sobre cada producto del carrito
             for item in cart:
-                product_id = item['id']  # Usar id en lugar de sku
+                sku = item['sku']  # Código único del producto
                 quantity = item['quantity']
-                product = Product.objects.get(id=product_id)  # Busca el producto por id
+                product = Product.objects.get(sku=sku)  # Busca el producto real en la BD
                 item_total = product.price * quantity
                 total += item_total  # Suma al total general
 
@@ -87,12 +80,10 @@ def my_orders(request):
 
 # Vista que carga el HTML del carrito visual estilo Amazon
 def cart_view(request):
-    return render(request, 'store/cart.html')
-
+    """Vista que muestra el carrito visual"""
+    return render(request, 'store/cart.html')  # Renderiza cart.html
 # ---------------------------------------------
 # Vista que muestra el nuevo carrito visual tipo Amazon
 # ---------------------------------------------
 def cart_view(request):
     return render(request, 'store/cart.html')  # Renderiza cart.html
-
-

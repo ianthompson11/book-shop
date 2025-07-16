@@ -16,7 +16,10 @@
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-gray-50 p-8">
+<body class="bg-gray-50 p-8" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+
+<!-- Include the navbar from store app -->
+{% include 'store/navbar.html' %}
 
 <!-- Pega aquí el contenido del archivo productos.html -->
 
@@ -139,16 +142,17 @@
                 Volver al listado
               </a>
             </div>
-                <!-- Add Cart Action in action="#" -->
-            <form method="post" action="#" class="mt-4">
-              {% csrf_token %}
-              <button type="submit" class="w-full sm:w-auto flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition-all duration-300">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                Agregar al carrito
-              </button>
-            </form>
+                <!-- Updated Cart Action -->
+              <div class="mt-4">
+                <button onclick="addToCart('{{ product.name }}', {{ product.price }}, '{{ product.description|escapejs }}', {{ product.id }})" 
+                        class="w-full sm:w-auto flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition-all duration-300">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                  Agregar al carrito
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -451,6 +455,42 @@
       });
     }
   });
+</script>
+
+<!-- Include cart JavaScript -->
+<script>
+// Cart functionality
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+/**
+ * Función para agregar productos al carrito
+ * Ya no requiere autenticación para agregar productos
+ */
+function addToCart(name, price, description, id) {
+    // Verifica si el producto ya está en el carrito usando el id
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ name, quantity: 1, price, description, id });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert("Producto agregado al carrito");
+
+    // Actualiza contador del navbar (si está presente)
+    const cartCount = document.getElementById("cart-count");
+    if (cartCount) {
+        cartCount.textContent = `(${cart.length})`;
+    }
+}
+</script>
+
+</body>
+</html>
+        cartCount.textContent = `(${cart.length})`;
+    }
+}
 </script>
 
 </body>

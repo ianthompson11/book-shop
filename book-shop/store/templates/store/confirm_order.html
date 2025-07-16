@@ -6,7 +6,7 @@
     <!-- Tailwind CSS CDN para estilos modernos -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans" data-authenticated="{{ user.is_authenticated }}">
 
     <!-- Incluye el menú de navegación superior -->
     {% include 'store/navbar.html' %}
@@ -72,6 +72,15 @@
     <!-- Script que prepara redirección a PayPal -->
     <script>
         document.getElementById("btn-comprar").addEventListener("click", () => {
+            // 🔐 Verificar autenticación solo al finalizar la compra
+            const isAuthenticated = document.body.getAttribute('data-authenticated') === "true";
+            
+            if (!isAuthenticated) {
+                // Redirigir al login si no está autenticado
+                window.location.href = "/accounts/login/?next=/confirm-order/";
+                return;
+            }
+
             const cart = JSON.parse(localStorage.getItem("cart_selected")) || [];
 
             if (cart.length === 0) {
