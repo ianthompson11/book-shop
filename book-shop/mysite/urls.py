@@ -16,20 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
-# IMPORTACIÓN PARA ARCHIVOS DE MEDIOS EN DESARROLLO
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     # Ruta del panel de administración
     path('admin/', admin.site.urls),
-
+    
     # Rutas de autenticación incluidas (login, logout, etc.)
-    path("accounts/", include("django.contrib.auth.urls")),  # login/logout
+    path("accounts/", include("django.contrib.auth.urls")),
+    
+    # Include URLs from productos app
+    path('productos/', include('productos.urls')),
+    
+    # Include URLs from store app
+    path('', include('store.urls')),
+]
 
-    # Esta línea incluye todas las rutas definidas en la app "store"
-    # Hace que por ejemplo '/products/', '/confirm-order/' funcionen
+# CONFIGURACIÓN PARA SERVIR ARCHIVOS DE IMAGEN (MEDIA) EN MODO DEBUG
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     path('', include('store.urls')),
 ]
 
