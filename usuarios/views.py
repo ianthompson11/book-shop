@@ -1,4 +1,3 @@
-# views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
@@ -39,7 +38,39 @@ def panel_usuario(request):
     # ordenes = Orden.objects.filter(usuario=request.user)  # Solo si ya existe esa app
     ordenes = []  # Quita esto si tienes acceso al modelo Orden
     return render(request, 'usuarios/panel.html', {'ordenes': ordenes})
-#Parte de estilo
+
+# Parte de estilo
 def index(request):
     return render(request, 'usuarios/index.html')
-#HECHO POR JASON
+
+# HECHO POR JASON
+
+# --------------------------------------------------------------------
+# NUEVO: Restablecimiento de contraseña sin correo
+# --------------------------------------------------------------------
+from django.views import View
+from django.contrib import messages
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth import login as auth_login
+from .forms import PasswordSelfResetForm  # junto al resto de imports
+from allauth.account.auth_backends import AuthenticationBackend  # Añadido para especificar el backend
+
+class PasswordSelfResetView(View):
+    template_name = "account/password_self_reset.html"
+
+    def get(self, request):
+        return render(request, self.template_name, {"form": PasswordSelfResetForm(), "ocultar_header": True})
+
+    def post(self, request):
+        form = PasswordSelfResetForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data["user"]
+            user.set_password(form.cleaned_data["new_password1"])
+            user.save()
+
+            # Especifica el backend de allauth al hacer login
+            auth_login(request, user, backend='allauth.account.auth_backends.AuthenticationBackend')
+            messages.success(request, "Contraseña actualizada e inicio de sesión exitoso.")
+            return redirect('/')  # se puede cambiar si se quiere otra ruta
+
+        return render(request, self.template_name, {"form": form})

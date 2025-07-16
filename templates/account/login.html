@@ -74,7 +74,7 @@
 
         {% if not SOCIALACCOUNT_ONLY %}
         <div class="forgot-password" style="margin-top: 15px;">
-            {% url 'account_reset_password' as reset_url %}
+            {% url 'password_self_reset' as reset_url %}
             <a href="{{ reset_url }}" class="forgot-password-link">
                 {% trans "Olvidé mi contraseña" %}
             </a>
