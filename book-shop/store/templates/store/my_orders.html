@@ -15,7 +15,7 @@
     <div class="max-w-5xl mx-auto px-4 py-10">
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Mis Órdenes 🧾</h1>
 
-        <!-- Si hay órdenes -->
+        <!-- Si hay órdenes disponibles -->
         {% if orders %}
             {% for order in orders %}
                 <div class="bg-white shadow-md rounded-lg mb-6 p-6">
@@ -38,9 +38,8 @@
                     </ul>
                 </div>
             {% endfor %}
-
-        <!-- Si no hay órdenes -->
         {% else %}
+            <!-- Mensaje si no hay órdenes -->
             <p class="text-center text-gray-600">No tienes órdenes registradas.</p>
         {% endif %}
     </div>
