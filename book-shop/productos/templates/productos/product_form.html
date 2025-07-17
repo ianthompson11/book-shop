@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test de productos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-50 p-8">
+
+<!-- Pega aquí el contenido del archivo productos.html -->
+
+<!-- Contenedor principal con estilos de fondo y animación -->
+<div class="max-w-4xl mx-auto bg-white bg-opacity-70 backdrop-blur-md rounded-xl shadow-md p-8 animate-fade-in">
+  <!-- Título del formulario -->
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
+
+  <!-- Formulario con soporte para archivos -->
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- SECCIÓN: MENSAJES DE ERROR -->
+    {% if form.errors %}
+      <div class="bg-red-50 text-red-600 border border-red-200 rounded-md p-4 mb-6">
+        <ul class="list-disc pl-6">
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <!-- SECCIÓN: LAYOUT PRINCIPAL - Dos columnas en pantallas medianas y grandes -->
+    <div class="flex flex-col md:flex-row gap-8">
+      <!-- COLUMNA IZQUIERDA: Campos del formulario -->
+      <div class="flex-1">
+        <!-- Campo: Nombre -->
+        <div class="mb-6">
+          <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ form.name.label }}{% if form.name.field.required %}<span class="text-red-500">*</span>{% endif %}
+          </label>
+          {{ form.name }}
+          {% if form.name.help_text %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.name.help_text }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Autor -->
+        <div class="mb-6">
+          <label for="{{ form.author.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ form.author.label }}{% if form.author.field.required %}<span class="text-red-500">*</span>{% endif %}
+          </label>
+          {{ form.author }}
+          {% if form.author.help_text %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.author.help_text }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Categoría -->
+        <div class="mb-6">
+          <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ form.category.label }}{% if form.category.field.required %}<span class="text-red-500">*</span>{% endif %}
+          </label>
+          {{ form.category }}
+          {% if form.category.help_text %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.category.help_text }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Tipo de producto -->
+        <div class="mb-6">
+          <label for="{{ form.product_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ form.product_type.label }}{% if form.product_type.field.required %}<span class="text-red-500">*</span>{% endif %}
+          </label>
+          {{ form.product_type }}
+          {% if form.product_type.help_text %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.product_type.help_text }}</p>
+          {% endif %}
+        </div>
+
+        <!-- SECCIÓN: Detalles de precio y stock -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <!-- Campo: Precio -->
+          <div>
+            <label for="{{ form.price.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ form.price.label }}{% if form.price.field.required %}<span class="text-red-500">*</span>{% endif %}
+            </label>
+            {{ form.price }}
+            {% if form.price.help_text %}
+              <p class="mt-1 text-xs text-gray-500">{{ form.price.help_text }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Campo: Stock -->
+          <div>
+            <label for="{{ form.stock.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ form.stock.label }}{% if form.stock.field.required %}<span class="text-red-500">*</span>{% endif %}
+            </label>
+            {{ form.stock }}
+            {% if form.stock.help_text %}
+              <p class="mt-1 text-xs text-gray-500">{{ form.stock.help_text }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- SECCIÓN: Información adicional -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <!-- Campo: ISBN -->
+          <div>
+            <label for="{{ form.isbn.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ form.isbn.label }}{% if form.isbn.field.required %}<span class="text-red-500">*</span>{% endif %}
+            </label>
+            {{ form.isbn }}
+            {% if form.isbn.help_text %}
+              <p class="mt-1 text-xs text-gray-500">{{ form.isbn.help_text }}</p>
+            {% endif %}
+            <p class="mt-1 text-xs text-gray-500">Debe tener exactamente 13 dígitos numéricos</p>
+          </div>
+
+          <!-- Campo: Fecha de publicación -->
+          <div>
+            <label for="{{ form.publication_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ form.publication_date.label }}{% if form.publication_date.field.required %}<span class="text-red-500">*</span>{% endif %}
+            </label>
+            {{ form.publication_date }}
+            {% if form.publication_date.help_text %}
+              <p class="mt-1 text-xs text-gray-500">{{ form.publication_date.help_text }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Campo: Descripción -->
+        <div class="mb-6">
+          <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ form.description.label }}{% if form.description.field.required %}<span class="text-red-500">*</span>{% endif %}
+          </label>
+          {{ form.description }}
+          {% if form.description.help_text %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.description.help_text }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA: Sección de imágenes -->
+      <div class="w-full md:w-1/3">
+        <!-- Campo: URL de imagen -->
+        <div class="mb-6">
+          <label for="{{ form.image_url.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ form.image_url.label }}{% if form.image_url.field.required %}<span class="text-red-500">*</span>{% endif %}
+          </label>
+          {{ form.image_url }}
+          {% if form.image_url.help_text %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.image_url.help_text }}</p>
+          {% endif %}
+          <p class="mt-1 text-xs text-gray-500">URL externa de la imagen (opcional)</p>
+        </div>
+
+        <!-- Campo: Subir imagen -->
+        <div class="mb-6">
+          <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ form.image.label }}{% if form.image.field.required %}<span class="text-red-500">*</span>{% endif %}
+          </label>
+          {{ form.image }}
+          {% if form.image.help_text %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.image.help_text }}</p>
+          {% endif %}
+        </div>
+
+        <!-- SECCIÓN: Vista previa de imágenes -->
+        <div class="mt-6 space-y-4">
+          <!-- Selector de fuente de imagen -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona la fuente de imagen:</label>
+            <div class="flex flex-col space-y-2">
+              <label class="inline-flex items-center">
+                <input type="radio" name="image_source" value="file" checked class="form-radio text-blue-600">
+                <span class="ml-2">Subir archivo</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input type="radio" name="image_source" value="url" class="form-radio text-blue-600">
+                <span class="ml-2">Usar URL</span>
+              </label>
+            </div>
+          </div>
+          <!-- Vista previa de imagen actual -->
+          {% if form.instance.image %}
+            <div class="p-4 bg-gray-50 rounded-lg">
+              <p class="text-sm font-medium text-gray-700 mb-2">Imagen actual:</p>
+              <img src="{{ form.instance.image.url }}" alt="Imagen actual" class="rounded-lg shadow-md w-full h-auto object-cover">
+            </div>
+          {% endif %}
+          
+          <!-- Contenedor para vista previa de nueva imagen -->
+          <div id="image-preview-container" class="p-4 bg-gray-50 rounded-lg {% if not form.instance.image %}hidden{% endif %}">
+            <p class="text-sm font-medium text-gray-700 mb-2">Vista previa:</p>
+            <img id="image-preview" src="#" alt="Vista previa" class="rounded-lg shadow-md w-full h-auto object-cover">
+          </div>
+            <!-- Vista previa de imagen desde URL -->
+            <div id="url-preview-container" class="p-4 bg-gray-50 rounded-lg hidden">
+              <p class="text-sm font-medium text-gray-700 mb-2">Vista previa desde URL:</p>
+              <img id="url-preview" src="#" alt="Vista previa desde URL" class="rounded-lg shadow-md w-full h-auto object-cover">
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN: Botones de acción -->
+    <div class="mt-8 flex justify-end gap-4">
+      <a href="{% url 'product_list' %}" class="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg shadow transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Cancelar
+      </a>
+      <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        Guardar
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- SECCIÓN: Scripts para funcionalidad -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('{{ form.image.id_for_label }}');
+    const urlInput = document.getElementById('{{ form.image_url.id_for_label }}');
+
+    const filePreviewContainer = document.getElementById('image-preview-container');
+    const filePreviewImage = document.getElementById('image-preview');
+
+    const urlPreviewContainer = document.getElementById('url-preview-container');
+    const urlPreviewImage = document.getElementById('url-preview');
+
+    const radios = document.querySelectorAll('input[name="image_source"]');
+
+    function hideAllPreviews() {
+      filePreviewContainer.classList.add('hidden');
+      urlPreviewContainer.classList.add('hidden');
+    }
+
+    function updatePreview() {
+      const selected = document.querySelector('input[name="image_source"]:checked').value;
+      hideAllPreviews();
+
+      if (selected === 'file' && fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          filePreviewImage.src = e.target.result;
+          filePreviewContainer.classList.remove('hidden');
+        }
+        reader.readAsDataURL(fileInput.files[0]);
+      } else if (selected === 'url' && urlInput.value.trim()) {
+        urlPreviewImage.src = urlInput.value.trim();
+        urlPreviewContainer.classList.remove('hidden');
+      }
+    }
+
+    // Listeners
+    fileInput.addEventListener('change', updatePreview);
+    urlInput.addEventListener('input', updatePreview);
+    radios.forEach(radio => radio.addEventListener('change', updatePreview));
+  });
+</script>
+
+<!-- SECCIÓN: Estilos CSS -->
+<style>
+  /* Animación de entrada para el contenedor principal */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  /* Mejoras visuales para campos de formulario */
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* Estilo para campos requeridos */
+  .text-red-500 {
+    margin-left: 3px;
+  }
+</style>
+
+</body>
+</html>

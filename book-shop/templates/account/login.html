@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% load socialaccount %} <!-- Añadido para soportar provider_login_url -->
+
+{% block head_title %}
+    {% trans "Iniciar Sesión" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="container-form">
+    <div class="formulario">
+        {% element h1 class="login-title" %}
+            {% trans "Iniciar Sesión" %}
+        {% endelement %}
+
+        {% if not SOCIALACCOUNT_ONLY %}
+            {% element p class="login-subtitle" %}
+                {% blocktranslate %}Si aún no tienes una cuenta, por favor <a href="{{ signup_url }}">regístrate</a> primero.{% endblocktranslate %}
+            {% endelement %}
+
+            {% url 'account_login' as login_url %}
+            {% element form form=form method="post" action=login_url tags="entrance,login" class="login-form" %}
+                {% slot body %}
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.login.id_for_label }}" class="form-label">{% trans "Usuario o Correo" %}</label>
+                        {{ form.login }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">{% trans "Contraseña" %}</label>
+                        {{ form.password }}
+                    </div>
+                    {{ redirect_field }}
+                {% endslot %}
+                {% slot actions %}
+                    {% element button type="submit" class="btn-login" tags="prominent,login" %}
+                        {% trans "Iniciar Sesión" %}
+                    {% endelement %}
+                {% endslot %}
+            {% endelement %}
+        {% endif %}
+
+        {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
+            {% element hr %}{% endelement %}
+            {% element button_group vertical=True %}
+                {% if PASSKEY_LOGIN_ENABLED %}
+                    {% element button type="submit" form="mfa_login" id="passkey_login" class="btn-login-outline" tags="prominent,login,outline,primary" %}
+                        {% trans "Iniciar con una passkey" %}
+                    {% endelement %}
+                {% endif %}
+                {% if LOGIN_BY_CODE_ENABLED %}
+                    {% element button href=request_login_code_url class="btn-login-outline" tags="prominent,login,outline,primary" %}
+                        {% trans "Enviar un código de inicio" %}
+                    {% endelement %}
+                {% endif %}
+            {% endelement %}
+        {% endif %}
+
+        {% if SOCIALACCOUNT_ENABLED %}
+        <div class="social-buttons">
+            {% if "google" in socialaccount_providers %}
+                <a href="{% provider_login_url "google" process="login" %}" class="social-btn google-btn">
+                    <button type="button"><i class='bx bxl-google'></i> Google</button>
+                </a>
+            {% endif %}
+            {% if "github" in socialaccount_providers %}
+                <a href="{% provider_login_url "github" process="login" %}" class="social-btn github-btn">
+                    <button type="button"><i class='bx bxl-github'></i> GitHub</button>
+                </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if not SOCIALACCOUNT_ONLY %}
+        <div class="forgot-password" style="margin-top: 15px;">
+            {% url 'password_self_reset' as reset_url %}
+            <a href="{{ reset_url }}" class="forgot-password-link">
+                {% trans "Olvidé mi contraseña" %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_body %}
+    {{ block.super }}
+    {% if PASSKEY_LOGIN_ENABLED %}
+        {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
+    {% endif %}
+{% endblock %}

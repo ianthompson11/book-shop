@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Órdenes</title>
+
+    <!-- Estilos modernos con Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Incluye el menú de navegación -->
+    {% include 'store/navbar.html' %}
+
+    <div class="max-w-5xl mx-auto px-4 py-10">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Mis Órdenes 🧾</h1>
+
+        <!-- Si hay órdenes -->
+        {% if orders %}
+            {% for order in orders %}
+                <div class="bg-white shadow-md rounded-lg mb-6 p-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xl font-semibold text-gray-800">
+                            Orden #{{ order.id }} - {{ order.get_status_display }}
+                        </h3>
+                        <span class="text-sm text-gray-500">{{ order.created_at }}</span>
+                    </div>
+
+                    <p class="text-right font-bold text-green-700 mb-3">Total: ${{ order.total }}</p>
+
+                    <ul class="divide-y divide-gray-200">
+                        {% for item in order.items.all %}
+                        <li class="py-2 flex justify-between text-gray-700">
+                            <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                            <span>${{ item.price }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+        <!-- Si no hay órdenes -->
+        {% else %}
+            <p class="text-center text-gray-600">No tienes órdenes registradas.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

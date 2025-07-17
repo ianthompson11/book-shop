@@ -1,0 +1,25 @@
+<!-- Barra de navegación con ícono de carrito -->
+<nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <!-- Logo o nombre de la tienda -->
+        <h1 class="text-2xl font-bold text-blue-700">BookShop Store</h1>
+
+        <!-- Menú de navegación -->
+        <div class="space-x-4 flex items-center">
+            <a href="/productos/" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+            <a href="/my-orders/" class="text-gray-700 hover:text-blue-600 font-medium">Mis órdenes</a>
+
+            <!-- Ícono del carrito que redirige al nuevo carrito visual -->
+            <a href="/cart/" title="Ver carrito" class="relative text-gray-700 hover:text-blue-600 font-medium">
+                🛒 <span id="cart-count" class="ml-1 text-sm text-red-600"></span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script>
+// Script para mostrar la cantidad de productos en el carrito
+const cartCount = document.getElementById("cart-count");
+const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+cartCount.textContent = cartData.length > 0 ? `(${cartData.length})` : '';
+</script>

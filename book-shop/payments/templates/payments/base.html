@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Mi sitio{% endblock %}</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="{% static 'payments/css/styles.css' %}">
+
+  <style>
+    body {
+      background-image: url("{% static 'payments/img/book2.jpg' %}");
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+
+  {% block styles %}
+  {% endblock %}
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-black bg-opacity-70">
+  <div class="max-w-md w-full p-6 bg-transparent backdrop-blur-xl rounded-lg shadow-lg border border-white/20 text-black">
+    {% block blurred_card %}
+    <!-- Aquí va el contenido de cada vista que use el contenedor blur -->
+    {% endblock %}
+  </div>
+
+  {% block scripts %}
+  {% endblock %}
+</body>
+</html>
