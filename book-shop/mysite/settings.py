@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv # libreria para cargar la variable del archivo .env #payments
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'productos',  # Your app for managing products
     'store', #Crear la app store Branch carrito-compras
+    'payments', #App payments
+    'rest_framework', # Esto sera para la integracion del server.js de payments con paypal
 ]
 
 MIDDLEWARE = [
@@ -130,7 +133,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "/"
 
 # Media files (for file uploads)
-import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+load_dotenv() # comando para cargar la variable del archivo .env #payments
+
+# PayPal Configuration - payments
+PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET') #toma el PAYPAL_CLIENT_SECRET del env guardado en el terminal

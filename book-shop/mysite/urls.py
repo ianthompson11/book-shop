@@ -31,6 +31,7 @@ urlpatterns = [
     
     # Include URLs from store app
     path('', include('store.urls')),
+    path('', include('payments.urls')), # payments
 ]
 
 # CONFIGURACIÓN PARA SERVIR ARCHIVOS DE IMAGEN (MEDIA) EN MODO DEBUG
