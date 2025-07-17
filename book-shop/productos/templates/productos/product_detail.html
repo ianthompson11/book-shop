@@ -313,7 +313,7 @@
               <label for="{{ form.comment.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
                 Comentario
               </label>
-              {{ form.comment}}
+              {{ form.comment }}
               {% if form.comment.help_text %}
                 <p class="mt-1 text-sm text-gray-500">{{ form.comment.help_text }}</p>
               {% endif %}
@@ -397,7 +397,7 @@
     
     // Star rating functionality
     const starButtons = document.querySelectorAll('.star-btn');
-    const ratingInput = document.getElementById('id_{{ form.score.name }}');
+    const ratingInput = document.getElementById('id_score');
     const ratingText = document.querySelector('.rating-text');
     
     if (starButtons.length > 0 && ratingInput) {
@@ -481,13 +481,6 @@ function addToCart(name, price, description, id) {
     // Actualiza contador del navbar (si está presente)
     const cartCount = document.getElementById("cart-count");
     if (cartCount) {
-        cartCount.textContent = `(${cart.length})`;
-    }
-}
-</script>
-
-</body>
-</html>
         cartCount.textContent = `(${cart.length})`;
     }
 }

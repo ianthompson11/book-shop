@@ -1,26 +1,29 @@
-// Recuperar carrito existente o crear uno nuevo
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-// Función para agregar un producto al carrito
-function addToCart(name, price, description, sku) {
-    const existingItem = cart.find(item => item.sku === sku);
+/**
+ * Función para agregar productos al carrito
+ * Ya no requiere autenticación para agregar productos
+ */
+function addToCart(name, price, description, id) {
+    // Verifica si el producto ya está en el carrito usando el id
+    const existingItem = cart.find(item => item.id === id);
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        cart.push({ name, quantity: 1, price, description, sku });
+        cart.push({ name, quantity: 1, price, description, id });
     }
 
-    // Guardar el carrito actualizado en localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
     alert("Producto agregado al carrito");
+
+    // Actualiza contador del navbar (si está presente)
+    const cartCount = document.getElementById("cart-count");
+    if (cartCount) {
+        cartCount.textContent = `(${cart.length})`;
+    }
 }
 
-// Detectar clic en el botón "Confirmar Pedido"
-document.addEventListener("DOMContentLoaded", () => {
-    const confirmButton = document.getElementById("confirmar-carrito");
-    if (confirmButton) {
-        confirmButton.addEventListener("click", () => {
-            window.location.href = "/confirm-order/";
-        });
+// Inicializar carrito desde localStorage
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cartCount) {
+        cartCount.textContent = `(${cart.length})`;
     }
-});
+}
