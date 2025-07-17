@@ -1,8 +1,5 @@
-const cart = [
-  { name: "Zapatos Rojos", quantity: 1, price: 50.0, description: "Zapatos deportivos", sku: "zapatos-rojos-01" },
-  { name: "Gorra Negra", quantity: 2, price: 20.0, description: "Gorra clásica", sku: "gorra-negra-02" },
-  { name: "Jeans Azules", quantity: 1, price: 50.0, description: "Jeans clásicos", sku: "jeans-azul-03" },
-];
+// Leer el carrito desde localStorage
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 // Función para mostrar los productos en la lista
 function displayCartItems() {
@@ -18,9 +15,11 @@ function displayCartItems() {
 
 // Evento para guardar carrito y redirigir
 document.getElementById("save-cart-btn").addEventListener("click", () => {
+  // No necesitas guardar si ya está en localStorage, pero puedes actualizarlo si lo has modificado
   localStorage.setItem("cart", JSON.stringify(cart));
   window.location.href = "/payments/";
 });
 
 // Mostrar los productos al cargar la página
 displayCartItems();
+

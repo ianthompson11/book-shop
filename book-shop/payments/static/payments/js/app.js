@@ -77,6 +77,22 @@ const paypalButtons = window.paypal.Buttons({
                     orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
                     orderData?.purchase_units?.[0]?.payments
                         ?.authorizations?.[0];
+                    // 1. Guardar en localStorage
+                localStorage.setItem("compraConfirmada", "true");
+
+                // 2. Opcional: enviar a Django (para registrar historial)
+                fetch("/api/marcar-compra/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        compraConfirmada: true,
+                        transaction_id: transaction.id,
+                        status: transaction.status,
+                    }),
+                });
+                
                 window.location.href = `/order-success/?transaction_id=${transaction.id}&status=${transaction.status}`;
                 console.log(
                     "Capture result",
