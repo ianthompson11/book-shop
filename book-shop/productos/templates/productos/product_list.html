@@ -1,3 +1,5 @@
+{% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,6 +7,18 @@
   <title>Test de productos</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+        body {
+    background-image: url("{% static '/img/3.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    }
+    .bg-blur {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -30,7 +44,7 @@
   </div>
 
   <!-- Filter form with modern styling -->
-  <div class="bg-white rounded-xl shadow-md p-6 mb-8 animate-fade-in">
+  <div class="bg-blur rounded-xl shadow-md p-6 mb-8 animate-fade-in">
     <form method="get" class="space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="relative">
@@ -88,7 +102,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {% for product in products %}
         <a href="{% url 'product_detail' product.pk %}" class="group">
-          <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden animate-fade-in cursor-pointer group-hover:border-blue-300 group-hover:border group-hover:scale-[1.02] group-hover:-translate-y-1" style="animation-delay: {{ forloop.counter|divisibleby:4 }}00ms">
+          <div class="bg-blur rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden animate-fade-in cursor-pointer group-hover:border-blue-300 group-hover:border group-hover:scale-[1.02] group-hover:-translate-y-1" style="animation-delay: {{ forloop.counter|divisibleby:4 }}00ms">
             <!-- Imagen -->
             <div class="h-48 overflow-hidden">
               {% if product.image %}
@@ -169,7 +183,7 @@
     <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
       {% if products.has_previous %}
         <a href="?page={{ products.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}" 
-           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-blur text-sm font-medium text-gray-500 hover:bg-gray-50">
           <span class="sr-only">Anterior</span>
           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -191,7 +205,7 @@
           </span>
         {% else %}
           <a href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}" 
-             class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+             class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blur text-sm font-medium text-gray-700 hover:bg-gray-50">
             {{ i }}
           </a>
         {% endif %}
@@ -199,7 +213,7 @@
       
       {% if products.has_next %}
         <a href="?page={{ products.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}" 
-           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-blur text-sm font-medium text-gray-500 hover:bg-gray-50">
           <span class="sr-only">Siguiente</span>
           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />

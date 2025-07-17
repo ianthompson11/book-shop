@@ -4,7 +4,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block head_title %}Bienvenido - Book Shop{% endblock %}</title>
+     {% block extra_head %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +23,7 @@
             <!-- Navegación izquierda -->
             <div class="nav-left" style="display: flex; align-items: center; gap: 20px;">
                 <a href="{% url 'home' %}" style="color: white; text-decoration: none; font-weight: bold;">Book Shop</a>
-                <a href="#" style="color: white; text-decoration: none;">Productos</a>
+                <a href="{% url 'productos' %}" style="color: white; text-decoration: none;">Productos</a>
                 
             </div>
             <!-- Usuario autenticado o login -->
@@ -61,9 +63,8 @@
     </header>
     {% endif %}
 
-    <div class="main-content" style="padding-top: 150px;">
-        {% block content %}{% endblock %}
-    </div>
+    
+    {% block content %}{% endblock %}
 
     <script src="{% static 'js/script.js' %}"></script>
 </body>
