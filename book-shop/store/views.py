@@ -3,7 +3,8 @@ from django.shortcuts import render  # Para renderizar templates HTML
 from django.http import JsonResponse  # Para devolver respuestas JSON (APIs)
 from django.views.decorators.csrf import csrf_exempt  # Para permitir POST sin token CSRF (usado con JS)
 from django.contrib.auth.decorators import login_required  # Para proteger vistas que requieren login
-from .models import Product, Order, OrderItem  # Importación de modelos propios
+from productos.models import Product  # Usar el modelo de productos
+from .models import Order, OrderItem  # Importación de modelos propios
 import json  # Para decodificar el cuerpo de las peticiones JSON
 
 # -----------------------------------
@@ -11,7 +12,7 @@ import json  # Para decodificar el cuerpo de las peticiones JSON
 # -----------------------------------
 def product_list(request):
     products = Product.objects.all()  # Obtiene todos los productos de la base de datos
-    return render(request, 'store/product_list.html', {'products': products})  # Los pasa al template para mostrarlos
+    return render(request, 'productos/product_list.html', {'products': products})  # Los pasa al template para mostrarlos
 
 # -----------------------------------
 # Vista que muestra el resumen del carrito

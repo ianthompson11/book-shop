@@ -18,12 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+<<<<<<< HEAD
 from django.conf import settings
 from django.conf.urls.static import static
+=======
+>>>>>>> bed66c5f8a19b50594cceff22f74bd549fac49ab
 
 urlpatterns = [
     # Ruta del panel de administración
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
     path("accounts/", include("django.contrib.auth.urls")), #login
     path('productos/', include('productos.urls')) # Include the URLs from the productos app
     path('productos/', include('productos.urls')), # Include the URLs from the productos app
@@ -31,3 +35,20 @@ urlpatterns = [
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+=======
+    
+    # Rutas de autenticación incluidas (login, logout, etc.)
+    path("accounts/", include("django.contrib.auth.urls")),
+    
+    # Include URLs from productos app
+    path('productos/', include('productos.urls')),
+    
+    # Include URLs from store app
+    path('', include('store.urls')),
+]
+
+# CONFIGURACIÓN PARA SERVIR ARCHIVOS DE IMAGEN (MEDIA) EN MODO DEBUG
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+>>>>>>> bed66c5f8a19b50594cceff22f74bd549fac49ab
