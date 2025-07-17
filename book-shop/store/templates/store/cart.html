@@ -35,6 +35,9 @@
         <button id="checkout-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-4 w-full rounded">
             Proceder al pago
         </button>
+        <script>
+       
+        </script>
     </div>
 </div>
 
@@ -162,39 +165,9 @@ function decreaseQty(index) {
     updateCartDisplay();
 }
 
-document.getElementById("checkout-btn").addEventListener("click", () => {
-    // 🔐 Verificar autenticación solo al proceder al pago
-    const isAuthenticated = document.body.getAttribute('data-authenticated') === "true";
-    
-    if (!isAuthenticated) {
-        // Redirigir al login si no está autenticado
-        window.location.href = "/accounts/login/?next=/cart/";
-        return;
-    }
-
-    // 🟨 Recolectar todos los checkboxes activos
-    const checkboxes = document.querySelectorAll("#cart-container input[type='checkbox']");
-    
-    const selectedItems = [];
-
-    checkboxes.forEach((checkbox, index) => {
-        if (checkbox.checked) {
-            selectedItems.push(cart[index]);  // ✅ Solo los productos marcados
-        }
-    });
-
-    // 🟥 Validación: que al menos un producto esté seleccionado
-    if (selectedItems.length === 0) {
-        alert("Por favor selecciona al menos un producto para continuar.");
-        return;
-    }
-
-    // 🟩 Guardar en localStorage solo los seleccionados
-    localStorage.setItem("cart_selected", JSON.stringify(selectedItems));
-
-    // 🔁 Redirigir al resumen del carrito
-    window.location.href = "/confirm-order/";
-});
+document.getElementById("checkout-btn").addEventListener("click", function () {
+    window.location.href = "/final-confirm";
+  });
 
 
 // Carga inicial

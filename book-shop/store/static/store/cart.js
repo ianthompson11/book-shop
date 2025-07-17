@@ -26,4 +26,4 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (cartCount) {
         cartCount.textContent = `(${cart.length})`;
     }
-}
+
