@@ -1,0 +1,28 @@
+{% extends "payments/base.html" %}
+{% load static %}
+
+{% block title %}Confirmar pedido{% endblock %}
+
+{% block blurred_card %}
+  <header class="mb-6 text-center">
+    <h1 class="text-3xl font-bold">Confirmar Pedido</h1>
+  </header>
+
+  <ul id="cart-list" class="mb-4 space-y-2 text-sm list-disc list-inside"></ul>
+
+  <button id="save-cart-btn"
+    class="w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg shadow-md transition">
+    Finalizar pedido
+  </button>
+
+  <button onclick="window.location.href='/'"
+      class="w-full mt-3 py-2 px-4 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg shadow-md transition">
+      Cancelar compra
+  </button>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'payments/js/confirm_order.js' %}"></script>
+{% endblock %}
+
+

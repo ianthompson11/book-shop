@@ -1,0 +1,43 @@
+{% extends "payments/base.html" %}
+{% load static %}
+
+{% block title %}Compra exitosa{% endblock %}
+
+{% block styles %}
+  <!-- Incluyo el CSS específico para animación de ganchito -->
+  <link rel="stylesheet" href="{% static 'payments/css/checkmark.css' %}">
+{% endblock %}
+
+{% block blurred_card %}
+    <!-- Cambié text-white por text-black -->
+
+    <header class="mb-6 text-center flex items-center justify-center space-x-3">
+      <!-- SVG animado del check -->
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+
+      <!-- Texto -->
+      <h1 class="text-3xl font-bold text-black">¡Compra completada!</h1>
+    </header>
+
+    <p class="mt-2 text-sm text-black text-center">Tu transacción fue procesada correctamente.</p>
+
+    <div class="text-sm space-y-2 mt-4">
+      <p><span class="font-semibold">ID de transacción:</span> {{ transaction_id }}</p>
+      <p><span class="font-semibold">Estado:</span> {{ status }}</p>
+    </div>
+
+    <div class="mt-6">
+      <a href="/"
+         class="w-full block text-center py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg shadow-md transition">
+         Volver al inicio
+      </a>
+    </div>
+{% endblock %}
+
+
+
+
+
