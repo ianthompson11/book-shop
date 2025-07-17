@@ -18,12 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # Ruta del panel de administración
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")), #login
+    path('productos/', include('productos.urls')) # Include the URLs from the productos app
     path('productos/', include('productos.urls')), # Include the URLs from the productos app
     path('', include('store.urls')), # Include the URLs from the store app
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
