@@ -36,11 +36,4 @@ urlpatterns = [
 # CONFIGURACIÓN PARA SERVIR ARCHIVOS DE IMAGEN (MEDIA) EN MODO DEBUG
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    path('', include('store.urls')),
-]
-
-# CONFIGURACIÓN PARA SERVIR ARCHIVOS DE IMAGEN (MEDIA) EN MODO DEBUG
-# Permite acceder a imágenes subidas desde el admin, como http://localhost:8000/media/products/imagen.jpg
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
