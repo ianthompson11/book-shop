@@ -1,16 +1,102 @@
-{% extends "base.html" %}
+{% extends "productos/base.html" %}
 {% load static %}
 {% load i18n %}
-
-{% block content %}
-<!-- body class="bg-gray-50 p-8"-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test de productos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+    background-image: url("{% static '/img/3.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    }
+    .bg-blur {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-50 p-8">
 
 <!-- Pega aquí el contenido del archivo productos.html -->
 
 
 <!-- productos.html -->
 
-  
+    <header class="fixed top-0 left-0 w-full z-50 bg-blur text-gray-800 shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <!-- Logo y navegación izquierda -->
+      <div class="flex items-center space-x-6">
+        <a href="{% url 'home' %}" class="text-xl font-bold hover:text-indigo-300 transition">
+          Book Shop
+        </a>
+        <a href="{% url 'productos' %}" class="text-sm font-medium hover:text-indigo-300 transition">
+          Productos
+        </a>
+      </div>
+      
+      <!-- Usuario autenticado o login -->
+      <div class="flex items-center space-x-4">
+        {% if user.is_authenticated %}
+          <span class="hidden sm:inline text-sm">{% trans "Bienvenido" %} <strong>{{ user.username }}</strong></span>
+
+          <!-- Panel del usuario (dropdown) -->
+          <div class="relative group">
+            <button class="flex items-center gap-1 text-sm font-medium hover:text-indigo-300 focus:outline-none">
+              Panel de Usuario
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <!-- Dropdown -->
+            <div class="absolute right-0 mt-2 w-64 bg-gray-900 text-white rounded-lg shadow-lg overflow-hidden opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200">
+              <div class="p-4 text-center">
+                <h2 class="text-lg font-semibold mb-2">Panel del Usuario</h2>
+                <p class="text-sm text-gray-300 mb-4">Aquí puedes ver tu historial y órdenes.</p>
+                <a href="/usuario/historial/" class="block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full mb-2 transition">
+                  Historial de Compras
+                </a>
+                <a href="/usuario/ordenes/" class="block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full transition">
+                  Estado de Órdenes
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <a href="{% url 'account_logout' %}" class="text-sm hover:text-red-400 transition">
+            {% trans "Cerrar Sesión" %}
+          </a>
+
+        {% else %}
+          <a href="{% url 'account_login' %}" class="text-sm hover:text-indigo-300 transition">
+            Iniciar sesión
+          </a>
+          <a href="{% url 'account_signup' %}" class="text-sm hover:text-indigo-300 transition">
+            Registrarse
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
 
 
 <div class="py-10 text-center animate-fade-in-up" data-aos="fade-up">
@@ -322,6 +408,5 @@
 </script>
 
 
-<!-- /body -->
-{% endblock %}
+</body>
 </html>

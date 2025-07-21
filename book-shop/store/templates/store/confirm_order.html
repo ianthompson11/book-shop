@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Confirmación de Pedido</title>
-    <!-- Tailwind CSS CDN para estilos modernos -->
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 font-sans" data-authenticated="{{ user.is_authenticated }}">
+{% extends "base.html" %}
+{% load static %}
 
+
+{%block title%}Confirmación de Pedido{%endblock%}
+
+{% block body_attributes %}
+  class="bg-gray-100 font-sans" data-authenticated="{{ user.is_authenticated }}"
+{% endblock %}
+{% block content %}
     <!-- Incluye el menú de navegación superior -->
-    {% include 'store/navbar.html' %}
 
     <!-- Contenedor principal del resumen del carrito -->
-    <div class="max-w-4xl mx-auto px-4 py-10">
+    <div class="max-w-4xl mx-auto px-4 py-20">
         <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Resumen del Carrito 🧾</h1>
 
         <!-- Aquí se mostrará el contenido del carrito -->
@@ -96,6 +95,6 @@
         });
     </script>
 
-</body>
+{%endblock%}
 </html>
 

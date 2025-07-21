@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'store', #Crear la app store Branch carrito-compras
     'payments', #App payments
     'rest_framework', # Esto sera para la integracion del server.js de payments con paypal
+    "widget_tweaks",
+
 
     # allauth apps
     'django.contrib.sites',

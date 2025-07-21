@@ -1,3 +1,4 @@
+{% extends "base.html" %}
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
@@ -30,10 +31,14 @@
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-gray-50 p-8" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+
+{% block body_attributes %}
+  class="bg-gray-50 p-8" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
+{% endblock %}
+
+{% block content %}
 
 <!-- Include the navbar from store app -->
-{% include 'store/navbar.html' %}
 
 <!-- Pega aquí el contenido del archivo productos.html -->
 
@@ -290,6 +295,6 @@ function addToCart(name, price, description, id) {
 }
 </script>
 
-</body>
+{% endblock %}
 </html>
  

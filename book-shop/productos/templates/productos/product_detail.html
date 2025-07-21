@@ -1,29 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Test de productos</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-up {
-      animation: fadeInUp 0.8s ease-out forwards;
-    }
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
-</head>
-<body class="bg-gray-50 p-8" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block body_attributes %}
+  class="bg-gray-50 p-8" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
+{% endblock %}
+
+{% block content %}
 
 <!-- Include the navbar from store app -->
-{% include 'store/navbar.html' %}
 
 <!-- Pega aquí el contenido del archivo productos.html -->
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
   <!-- Breadcrumb -->
   <nav class="mb-6 text-sm text-gray-500">
     <ol class="flex items-center space-x-2">
@@ -38,7 +27,7 @@
   </nav>
 
   <!-- Main content container -->
-  <div class="bg-white bg-opacity-70 backdrop-blur-md rounded-xl shadow-md overflow-hidden">
+  <div class="bg-blur bg-opacity-70 rounded-xl shadow-md overflow-hidden">
     <!-- Product Header Section -->
     <div class="p-6 border-b border-gray-200">
       <h1 class="text-3xl font-bold text-gray-800 mb-2 animate-fade-in">{{ product.name }}</h1>
@@ -160,7 +149,7 @@
   </div>
 
   <!-- Reviews Section -->
-  <div class="mt-10 bg-white bg-opacity-70 backdrop-blur-md rounded-xl shadow-md overflow-hidden animate-fade-in" style="animation-delay: 400ms;">
+  <div class="mt-10 bg-blur bg-opacity-70 backdrop-blur-md rounded-xl shadow-md overflow-hidden animate-fade-in" style="animation-delay: 400ms;">
     <div class="p-6 border-b border-gray-200">
       <h2 class="text-2xl font-bold text-gray-800">Reseñas</h2>
       
@@ -202,7 +191,7 @@
       {% if ratings %}
         <div id="reviews-container" class="space-y-6">
           {% for rating in ratings|slice:":3" %}
-            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 transition-all duration-300 hover:shadow-md review-item">
+            <div class="bg-blur rounded-lg shadow-sm border border-gray-100 p-4 transition-all duration-300 hover:shadow-md review-item">
               <div class="flex justify-between items-start">
                 <div>
                   <p class="font-medium text-gray-800">{{ rating.user.username }}</p>
@@ -276,7 +265,7 @@
     </div>
 
     <!-- Review Form with Star Rating -->
-    <div class="p-6 bg-gray-50 border-t border-gray-200">
+    <div class="p-6 bg-blur border-t border-gray-200">
       {% if form %}
         <h3 class="text-xl font-semibold text-gray-800 mb-4">Escribe una reseña</h3>
         <form method="post" class="space-y-4">
@@ -486,5 +475,5 @@ function addToCart(name, price, description, id) {
 }
 </script>
 
-</body>
+{% endblock %}
 </html>

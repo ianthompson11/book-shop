@@ -3,69 +3,106 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block head_title %}Bienvenido - Book Shop{% endblock %}</title>
-     {% block extra_head %}{% endblock %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>{% block title %}Test de productos {%endblock%}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body {
+    background-image: url("{% static '/img/3.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    }
+    .bg-blur {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
-<body>
-    <div class="overlay"></div>
 
-    {% if request.path != '/accounts/login/' and request.path != '/accounts/signup/' and request.path != '/accounts/password/reset/' and request.path != '/accounts/password/reset/done/' and request.path != '/accounts/logout/' and request.path != '/accounts/password/manual-reset/' and request.path != '/accounts/google/login/' and request.path != '/accounts/github/login/' %}
-    <!-- Encabezado fijo -->
-    <header class="header" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
-        <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #2c2f34; color: white;">
-            <!-- Navegación izquierda -->
-            <div class="nav-left" style="display: flex; align-items: center; gap: 20px;">
-                <a href="{% url 'home' %}" style="color: white; text-decoration: none; font-weight: bold;">Book Shop</a>
-                <a href="{% url 'productos' %}" style="color: white; text-decoration: none;">Productos</a>
-                
+<body {% block body_attributes %}class="bg-gray-50 p-10"{% endblock %}>
+    <header class="fixed top-0 left-0 w-full z-50 bg-blur text-gray-800 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+            
+            <!-- Logo y navegación izquierda -->
+            <div class="flex items-center space-x-6">
+                <a href="{% url 'home' %}" class="text-xl font-bold hover:text-indigo-300 transition">
+                Book Shop
+                </a>
+                <a href="{% url 'productos' %}" class="text-gray-700 hover:text-blue-600 font-medium">
+                Productos
+                </a>
             </div>
+
             <!-- Usuario autenticado o login -->
-            <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
+            <div class="flex items-center space-x-4">
+                <a href="/productos/" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
                 {% if user.is_authenticated %}
-                    <span class="user-info">{% trans "Bienvenido" %} {{ user.username }}</span>
-                    <div class="user-panel-dropdown" style="position: relative;">
-                        <a href="javascript:void(0)" class="btn-panel-toggle" style="color: white; text-decoration: none;">
-                            Panel de Usuario
+                <span class="hidden sm:inline text-sm">{% trans "Bienvenido" %} <strong>{{ user.username }}</strong></span>
+                <!-- Panel del usuario (dropdown) -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1 text-sm font-medium hover:text-indigo-300 focus:outline-none">
+                    Panel de Usuario
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    </button>
+
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 mt-2 w-64 bg-gray-900 text-white rounded-lg shadow-lg overflow-hidden opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200">
+                    <div class="p-4 text-center">
+                        <h2 class="text-lg font-semibold mb-2">Panel del Usuario</h2>
+                        <p class="text-sm text-gray-300 mb-4">Aquí puedes ver tu historial y órdenes.</p>
+                        <a href="/usuario/historial/" class="block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full mb-2 transition">
+                        Historial de Compras
                         </a>
-                        <div id="userPanel" class="user-panel"
-                             style="position: absolute; right: 0; top: 100%; background: #111; color: white; width: 300px;
-                                    border-radius: 8px; overflow: hidden; max-height: 0; transition: max-height 0.5s ease;">
-                            <div style="padding: 20px; text-align: center;">
-                                <h2 style="font-size: 1.2rem; margin-bottom: 10px;">Panel del Usuario</h2>
-                                <p style="margin-bottom: 15px;">
-                                    Aquí puedes ver tu historial de compras<br>y estado de órdenes.
-                                </p>
-                                <a href="/usuario/historial/" style="display: block; background: #4f46e5; color: white; padding: 8px 16px; margin: 8px auto; border-radius: 9999px; text-decoration: none; width: fit-content;">
-                                    Ver Historial de Compras
-                                </a>
-                                <a href="/usuario/ordenes/" style="display: block; background: #4f46e5; color: white; padding: 8px 16px; margin: 8px auto; border-radius: 9999px; text-decoration: none; width: fit-content;">
-                                    Ver Estado de Órdenes
-                                </a>
-                            </div>
-                        </div>
+                        <a href="/usuario/ordenes/" class="block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full transition">
+                        Estado de Órdenes
+                        </a>
                     </div>
-                    <a href="{% url 'account_logout' %}" class="btn-logout" style="color: white; text-decoration: none;">
-                        {% trans "Cerrar Sesión" %}
-                    </a>
+                    </div>
+                </div>
+
+                <a href="{% url 'account_logout' %}" class="text-sm hover:text-red-400 transition">
+                    {% trans "Cerrar Sesión" %}
+                </a>
+
                 {% else %}
-                    <a href="{% url 'account_login' %}" style="color: white; text-decoration: none;">Iniciar sesión</a>
-                    <a href="{% url 'account_signup' %}" style="color: white; text-decoration: none;">Registrarse</a>
+                <a href="{% url 'account_login' %}" class="text-gray-700 hover:text-blue-600 font-medium transition">
+                    Iniciar sesión
+                </a>
+                <a href="{% url 'account_signup' %}" class="text-gray-700 hover:text-blue-600 font-medium">
+                    Registrarse
+                </a>
                 {% endif %}
+                <a href="/my-orders/" class="text-gray-700 hover:text-blue-600 font-medium">Mis órdenes</a>
+                <!-- Ícono del carrito que redirige al nuevo carrito visual -->
+                <a href="/cart/" title="Ver carrito" class="relative text-gray-700 hover:text-blue-600 font-medium">
+                    🛒 <span id="cart-count" class="ml-1 text-sm text-red-600"></span>
+                </a>
+            </div>
             </div>
         </div>
-    </header>
-    {% endif %}
-
-    
-    {% block content %}{% endblock %}
-
-    <script src="{% static 'js/script.js' %}"></script>
+</header>
+{% block content %} {% endblock %}
 </body>
-</html>
+
+<script>
+// Script para mostrar la cantidad de productos en el carrito
+const cartCount = document.getElementById("cart-count");
+const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+cartCount.textContent = cartData.length > 0 ? `(${cartData.length})` : '';
+</script>

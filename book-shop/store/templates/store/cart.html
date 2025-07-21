@@ -1,17 +1,13 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Carrito de compras</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-</head>
-<body class="bg-gray-50">
-<!-- Incluye menú de navegación -->
-{% include 'store/navbar.html' %}
 
-<div class="max-w-7xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Incluye menú de navegación -->
+{%block title%} Carrito de Compras {%endblock%}
+{% block body_attributes %}
+  class="bg-gray-50"
+{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto py-20 px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
 
     <!-- 🛍️ Lista de productos en el carrito (2/3 del ancho) -->
     <div class="md:col-span-2 space-y-6">
@@ -20,7 +16,7 @@
     </div>
 
     <!-- 🧾 Resumen del pedido (1/3 del ancho) -->
-    <div class="bg-white p-6 shadow-md rounded">
+    <div class="bg-blur p-6 shadow-md rounded">
         <h2 class="text-xl font-semibold mb-4">Resumen del pedido</h2>
         <p id="total-items" class="text-sm text-gray-600 mb-2">Subtotal (0 productos):</p>
         <p id="total-amount" class="text-2xl font-bold text-green-600 mb-4">$0.00</p>
@@ -66,7 +62,7 @@ function updateCartDisplay() {
         const subtotal = item.price * item.quantity;
 
         const itemDiv = document.createElement("div");
-        itemDiv.className = "flex bg-white p-4 rounded shadow-md";
+        itemDiv.className = "flex bg-blur p-4 rounded shadow-md";
 
         itemDiv.innerHTML = `
             <input type="checkbox" class="mr-4 mt-6 item-checkbox" data-index="${index}" checked>
@@ -172,6 +168,6 @@ document.getElementById("checkout-btn").addEventListener("click", function () {
 updateCartDisplay();
 </script>
 
-</body>
+{% endblock %}
 </html>
 
