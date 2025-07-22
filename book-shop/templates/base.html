@@ -102,7 +102,38 @@
 
 <script>
 // Script para mostrar la cantidad de productos en el carrito
-const cartCount = document.getElementById("cart-count");
-const cartData = JSON.parse(localStorage.getItem("cart")) || [];
-cartCount.textContent = cartData.length > 0 ? `(${cartData.length})` : '';
+function updateCartCount() {
+    const cartCount = document.getElementById("cart-count");
+    if (cartCount) {
+        const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+        cartCount.textContent = cartData.length > 0 ? `(${cartData.length})` : '';
+    }
+}
+
+// Actualizar contador al cargar la página
+updateCartCount();
+
+// Escuchar cambios en localStorage para actualizar el contador en tiempo real
+window.addEventListener('storage', function(e) {
+    if (e.key === 'cart') {
+        updateCartCount();
+    }
+});
+
+// También actualizar cuando se modifica desde la misma pestaña
+const originalSetItem = localStorage.setItem;
+localStorage.setItem = function(key, value) {
+    originalSetItem.apply(this, arguments);
+    if (key === 'cart') {
+        updateCartCount();
+    }
+};
+
+const originalRemoveItem = localStorage.removeItem;
+localStorage.removeItem = function(key) {
+    originalRemoveItem.apply(this, arguments);
+    if (key === 'cart') {
+        updateCartCount();
+    }
+};
 </script>

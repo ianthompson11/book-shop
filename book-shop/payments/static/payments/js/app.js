@@ -10,7 +10,13 @@ const paypalButtons = window.paypal.Buttons({
     },
    async createOrder() {
         try {
-            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            // Usar cart_checkout que contiene solo los productos seleccionados para la compra
+            const cart = JSON.parse(localStorage.getItem("cart_checkout")) || [];
+            
+            if (cart.length === 0) {
+                throw new Error("No hay productos seleccionados para la compra.");
+            }
+            
             const response = await fetch("/api/orders/", {
                 method: "POST",
                 headers: {
@@ -77,10 +83,10 @@ const paypalButtons = window.paypal.Buttons({
                     orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
                     orderData?.purchase_units?.[0]?.payments
                         ?.authorizations?.[0];
-                    // 1. Guardar en localStorage
+                // 1. Guardar en localStorage
                 localStorage.setItem("compraConfirmada", "true");
 
-                // 2. Opcional: enviar a Django (para registrar historial)
+                // 2. Enviar a Django y limpiar carrito si es exitoso
                 fetch("/api/marcar-compra/", {
                     method: "POST",
                     headers: {
@@ -91,6 +97,41 @@ const paypalButtons = window.paypal.Buttons({
                         transaction_id: transaction.id,
                         status: transaction.status,
                     }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.clear_cart) {
+                        // Obtener el carrito principal y el carrito de compra
+                        const mainCart = JSON.parse(localStorage.getItem("cart")) || [];
+                        const purchasedCart = JSON.parse(localStorage.getItem("cart_checkout")) || [];
+                        
+                        // Remover los productos comprados del carrito principal
+                        const updatedMainCart = mainCart.filter(mainItem => {
+                            return !purchasedCart.some(purchasedItem => 
+                                purchasedItem.sku === mainItem.sku
+                            );
+                        });
+                        
+                        // Actualizar el carrito principal sin los productos comprados
+                        if (updatedMainCart.length > 0) {
+                            localStorage.setItem("cart", JSON.stringify(updatedMainCart));
+                        } else {
+                            localStorage.removeItem("cart");
+                        }
+                        
+                        // Limpiar los carritos temporales
+                        localStorage.removeItem("cart_selected");
+                        localStorage.removeItem("cart_checkout");
+                        
+                        console.log("Productos comprados removidos del carrito principal");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al marcar compra como completada:", error);
+                    // En caso de error, limpiar todo el carrito como medida de seguridad
+                    localStorage.removeItem("cart");
+                    localStorage.removeItem("cart_selected");
+                    localStorage.removeItem("cart_checkout");
                 });
                 
                 window.location.href = `/order-success/?transaction_id=${transaction.id}&status=${transaction.status}`;

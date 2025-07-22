@@ -159,8 +159,27 @@ function decreaseQty(index) {
 }
 
 document.getElementById("checkout-btn").addEventListener("click", function () {
+    // Obtener solo los productos seleccionados (checkbox marcado)
+    const selectedItems = [];
+    const checkboxes = document.querySelectorAll(".item-checkbox");
+    
+    checkboxes.forEach((checkbox, index) => {
+        if (checkbox.checked) {
+            selectedItems.push(cart[index]);
+        }
+    });
+    
+    if (selectedItems.length === 0) {
+        alert("Por favor, selecciona al menos un producto para proceder al pago.");
+        return;
+    }
+    
+    // Guardar los elementos seleccionados en localStorage
+    localStorage.setItem("cart_selected", JSON.stringify(selectedItems));
+    
+    // Redirigir a la confirmación
     window.location.href = "/final-confirm";
-  });
+});
 
 
 

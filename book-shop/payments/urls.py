@@ -7,5 +7,6 @@ urlpatterns = [
     path("order-success/", views.order_success, name="order_success"),
     path('api/orders/', views.create_order, name='create_order'), #Usa el django rest framework 
     path('api/orders/<str:order_id>/capture/', views.capture_order, name='capture_order'), #Usa el django rest framework 
+    path('api/marcar-compra/', views.marcar_compra_completada, name='marcar_compra_completada'),
 ]
 

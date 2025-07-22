@@ -35,6 +35,50 @@
          Volver al inicio
       </a>
     </div>
+
+    <script>
+      // Asegurar que el carrito esté completamente limpio después de una compra exitosa
+      function clearCart() {
+        // Obtener el carrito principal y el carrito de compra
+        const mainCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const purchasedCart = JSON.parse(localStorage.getItem("cart_checkout")) || [];
+        
+        if (purchasedCart.length > 0) {
+          // Remover los productos comprados del carrito principal
+          const updatedMainCart = mainCart.filter(mainItem => {
+            return !purchasedCart.some(purchasedItem => 
+              purchasedItem.sku === mainItem.sku
+            );
+          });
+          
+          // Actualizar el carrito principal sin los productos comprados
+          if (updatedMainCart.length > 0) {
+            localStorage.setItem("cart", JSON.stringify(updatedMainCart));
+          } else {
+            localStorage.removeItem("cart");
+          }
+        } else {
+          // Si no hay carrito de compra, limpiar todo (fallback)
+          localStorage.removeItem("cart");
+        }
+        
+        // Limpiar siempre los carritos temporales
+        localStorage.removeItem("cart_selected");
+        localStorage.removeItem("cart_checkout");
+        
+        // También limpiar cualquier contador de carrito que pueda estar visible
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount) {
+          const remainingCart = JSON.parse(localStorage.getItem("cart")) || [];
+          cartCount.textContent = remainingCart.length > 0 ? `(${remainingCart.length})` : '';
+        }
+        
+        console.log("Productos comprados removidos del carrito principal");
+      }
+      
+      // Ejecutar al cargar la página
+      clearCart();
+    </script>
 {% endblock %}
 
 
