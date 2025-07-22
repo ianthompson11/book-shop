@@ -1,7 +1,7 @@
 # Importa las herramientas necesarias del panel de administración de Django
 from django.contrib import admin
 # Importa los modelos que se van a registrar en el panel de administración
-from .models import Product, Order, OrderItem
+from .models import Order, OrderItem
 
 # -----------------------------------------------
 # Configura la visualización de los productos dentro de una orden
@@ -22,7 +22,6 @@ class OrderAdmin(admin.ModelAdmin):
 # -----------------------------------------------
 # Registro de modelos en el panel de administración
 # -----------------------------------------------
-admin.site.register(Product)  # Activa la administración del modelo Product
 admin.site.register(Order, OrderAdmin)  # Usa la configuración personalizada de OrderAdmin
 
 

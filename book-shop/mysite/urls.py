@@ -37,7 +37,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),   # URLs de django-allauth
     path('productos/', include('productos.urls')), # Include the URLs from the productos app
-    path('', include('store.urls')), # Include the URLs from the store app
+    path('store/', include('store.urls')), # Include the URLs from the store app with prefix
     path('', include('payments.urls')), # payments
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

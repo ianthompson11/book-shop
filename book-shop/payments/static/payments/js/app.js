@@ -10,7 +10,13 @@ const paypalButtons = window.paypal.Buttons({
     },
    async createOrder() {
         try {
-            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            // Primero intenta obtener el carrito de checkout, luego el carrito normal
+            const cart = JSON.parse(localStorage.getItem("cart_checkout")) || 
+                         JSON.parse(localStorage.getItem("cart_selected")) ||
+                         JSON.parse(localStorage.getItem("cart")) || [];
+            
+            console.log("DEBUG - Carrito para PayPal:", cart); // Debug
+            
             const response = await fetch("/api/orders/", {
                 method: "POST",
                 headers: {
@@ -77,10 +83,18 @@ const paypalButtons = window.paypal.Buttons({
                     orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
                     orderData?.purchase_units?.[0]?.payments
                         ?.authorizations?.[0];
-                    // 1. Guardar en localStorage
+                        
+                // Obtener el carrito antes de limpiarlo (usar el mismo carrito que se envió a PayPal)
+                const cart = JSON.parse(localStorage.getItem("cart_checkout")) || 
+                             JSON.parse(localStorage.getItem("cart_selected")) ||
+                             JSON.parse(localStorage.getItem("cart")) || [];
+                
+                console.log("DEBUG - Carrito para confirmar compra:", cart); // Debug
+                
+                // 1. Guardar en localStorage que la compra fue confirmada
                 localStorage.setItem("compraConfirmada", "true");
 
-                // 2. Opcional: enviar a Django (para registrar historial)
+                // 2. Enviar la información del carrito a Django para crear la orden
                 fetch("/api/marcar-compra/", {
                     method: "POST",
                     headers: {
@@ -90,9 +104,62 @@ const paypalButtons = window.paypal.Buttons({
                         compraConfirmada: true,
                         transaction_id: transaction.id,
                         status: transaction.status,
+                        cart: cart  // Enviar el carrito completo
                     }),
-                });
+                }).then(response => response.json())
+                  .then(result => {
+                      console.log("Respuesta del servidor:", result);
+                      if (result.success) {
+                          // 3. Limpiar TODOS los tipos de carrito después de confirmar que se guardó la orden
+                          console.log("Limpiando carrito después de compra exitosa...");
+                          console.log("Estado ANTES del vaciado:");
+                          console.log("cart:", localStorage.getItem("cart"));
+                          console.log("cart_selected:", localStorage.getItem("cart_selected"));
+                          console.log("cart_checkout:", localStorage.getItem("cart_checkout"));
+                          console.log("cartCount:", localStorage.getItem("cartCount"));
+                          
+                          localStorage.removeItem("cart");
+                          localStorage.removeItem("cart_selected");
+                          localStorage.removeItem("cart_checkout");
+                          localStorage.setItem("cartCount", "0");
+                          
+                          console.log("Estado DESPUÉS del vaciado:");
+                          console.log("cart:", localStorage.getItem("cart"));
+                          console.log("cart_selected:", localStorage.getItem("cart_selected"));
+                          console.log("cart_checkout:", localStorage.getItem("cart_checkout"));
+                          console.log("cartCount:", localStorage.getItem("cartCount"));
+                          
+                          // Actualizar el contador del carrito en la UI si existe
+                          const cartCountElement = document.querySelector("#cart-count");
+                          if (cartCountElement) {
+                              cartCountElement.textContent = "(0)";
+                              console.log("🔄 Contador UI actualizado a (0)");
+                          } else {
+                              console.log("⚠️ No se encontró el elemento #cart-count");
+                          }
+                          
+                          // También buscar otras posibles formas del contador
+                          const alternativeCounters = document.querySelectorAll('[class*="cart"], [id*="cart"], [class*="count"], [id*="count"]');
+                          console.log("🔍 Elementos de carrito encontrados:", alternativeCounters.length);
+                          alternativeCounters.forEach((elem, index) => {
+                              console.log(`Elemento ${index}:`, elem.tagName, elem.className, elem.id, elem.textContent);
+                              if (elem.textContent && elem.textContent.includes("(")) {
+                                  elem.textContent = elem.textContent.replace(/\(\d+\)/, "(0)");
+                                  console.log(`🔄 Actualizado elemento ${index}`);
+                              }
+                          });
+                          
+                          console.log("✅ Carrito limpiado exitosamente");
+                          console.log("Orden guardada exitosamente:", result);
+                      } else {
+                          console.error("❌ Error al guardar la orden:", result.error);
+                      }
+                  })
+                  .catch(error => {
+                      console.error("Error en la comunicación con el servidor:", error);
+                  });
                 
+                // Redirigir a la página de éxito
                 window.location.href = `/order-success/?transaction_id=${transaction.id}&status=${transaction.status}`;
                 console.log(
                     "Capture result",

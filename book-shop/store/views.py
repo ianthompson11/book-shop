@@ -42,9 +42,9 @@ def create_order(request):
 
             # Itera sobre cada producto del carrito
             for item in cart:
-                sku = item['sku']  # Código único del producto
+                product_id = item['id']  # Usar ID en lugar de SKU
                 quantity = item['quantity']
-                product = Product.objects.get(sku=sku)  # Busca el producto real en la BD
+                product = Product.objects.get(id=product_id)  # Busca el producto real en la BD por ID
                 item_total = product.price * quantity
                 total += item_total  # Suma al total general
 
@@ -56,9 +56,15 @@ def create_order(request):
                     price=product.price
                 )
 
-                # Resta el stock del producto vendido
-                product.stock -= quantity
-                product.save()
+                # Resta el stock del producto vendido (solo para productos físicos)
+                if hasattr(product, 'product_type') and product.product_type == 'physical':
+                    if product.stock >= quantity:
+                        product.stock -= quantity
+                        product.save()
+                elif product.stock >= quantity:
+                    # Para productos sin product_type pero con stock
+                    product.stock -= quantity
+                    product.save()
 
             # Asigna el total a la orden y guarda
             order.total = total

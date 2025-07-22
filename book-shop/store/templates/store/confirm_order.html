@@ -76,7 +76,7 @@
             
             if (!isAuthenticated) {
                 // Redirigir al login si no está autenticado
-                window.location.href = "/accounts/login/?next=/confirm-order/";
+                window.location.href = "/accounts/login/?next=/store/confirm-order/";
                 return;
             }
 
@@ -91,7 +91,7 @@
             localStorage.setItem("cart_checkout", JSON.stringify(cart));
 
             // 🔁 Redirección a la ruta donde se integrará la pasarela PayPal
-            window.location.href = "/checkout/";
+            window.location.href = "/final-confirm/";
         });
     </script>
 

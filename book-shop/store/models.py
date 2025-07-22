@@ -1,20 +1,6 @@
 # Importación del módulo para definir modelos en Django
 from django.db import models
-
-# ----------------------------
-# MODELO DE PRODUCTO
-# ----------------------------
-class Product(models.Model):
-    name = models.CharField(max_length=100)  # Nombre del producto (máximo 100 caracteres)
-    description = models.TextField()  # Descripción detallada del producto
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # Precio con hasta 10 dígitos y 2 decimales
-    sku = models.CharField(max_length=100, unique=True)  # Código único para identificar el producto
-    stock = models.IntegerField()  # Cantidad disponible en inventario
-    image = models.ImageField(upload_to='products/', blank=True, null=True)  # Imagen del producto (opcional)
-
-    def __str__(self):
-        # Representación legible del producto en el panel de administración
-        return self.name
+from productos.models import Product  # Importar desde la app productos
 
 # ----------------------------
 # MODELO DE ORDEN DE COMPRA
@@ -44,7 +30,7 @@ class Order(models.Model):
 # ----------------------------
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)  # Relación con la orden principal
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)  # Producto relacionado
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)  # Producto relacionado (desde productos app)
     quantity = models.PositiveIntegerField(default=1)  # Cantidad de ese producto comprado
     price = models.DecimalField(max_digits=10, decimal_places=2)  # Precio del producto en ese momento
 
