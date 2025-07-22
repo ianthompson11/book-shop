@@ -11,53 +11,33 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import os
-from dotenv import load_dotenv # libreria para cargar la variable del archivo .env #payments
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-2#0+q#%l&tvgq2u)io)fa#f5&4qh+#5*8%2pe$fss$ugfchpk7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []  # Añade hosts (ej. ['localhost', '127.0.0.1']) en producción
+ALLOWED_HOSTS = []
+
 
 # Application definition
+
 INSTALLED_APPS = [
-    # Apps internas
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usuarios',  # App de usuarios añadida por Jason
-    'productos',  # Your app for managing products
-    'store', #Crear la app store Branch carrito-compras
-    'payments', #App payments
-    'rest_framework', # Esto sera para la integracion del server.js de payments con paypal
-    "widget_tweaks",
-
-
-    # allauth apps
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-
-    # Proveedores sociales
-    'allauth.socialaccount.providers.google',  # Para Google
-    'allauth.socialaccount.providers.github',  # Para GitHub
 ]
-
-SITE_ID = 2  # Obligatorio para allauth
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -65,7 +45,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Middleware de allauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -75,7 +54,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'mysite/templates'],
+        'DIRS': [BASE_DIR / 'templates' , BASE_DIR / 'mysite'/'templates' ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,7 +68,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+
 # Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -97,7 +79,10 @@ DATABASES = {
     }
 }
 
+
 # Password validation
+# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -113,51 +98,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-LANGUAGE_CODE = 'es'  # Consolidado aquí
-TIME_ZONE = 'America/Panama' #hora de Panamá
-USE_I18N = True
-USE_L10N = True
-LANGUAGES = (
-    ('es', 'Spanish'),
-)
 
-# Static files
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static",]
+# Internationalization
+# https://docs.djangoproject.com/en/5.2/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+STATIC_URL = 'static/'
 
 # Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Autenticación
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',  # Login normal
-    'allauth.account.auth_backends.AuthenticationBackend',  # allauth
-)
-
-# Redirecciones
-LOGIN_REDIRECT_URL = '/home/'  # Redirige a la página principal tras login
-ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'  # Redirige a login tras logout
-# Opciones de allauth
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # Para pruebas localmente
-ACCOUNT_LOGIN_METHODS = {'email', 'username'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_LOGOUT_ON_GET = False  # Cierre de sesión con GET
-
-# Configuración de email (para recuperación de contraseña)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Para pruebas
-load_dotenv() # comando para cargar la variable del archivo .env #payments
-
-# Proveedores sociales
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
-    },
-    'github': {
-        'SCOPE': ['user:email'],
-    },
-}
-
-# PayPal Configuration - payments
-PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET') #toma el PAYPAL_CLIENT_SECRET del env guardado en el terminal
+LOGIN_REDIRECT_URL = "/"
