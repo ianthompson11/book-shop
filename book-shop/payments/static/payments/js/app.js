@@ -110,47 +110,54 @@ const paypalButtons = window.paypal.Buttons({
                   .then(result => {
                       console.log("Respuesta del servidor:", result);
                       if (result.success) {
-                          // 3. Limpiar TODOS los tipos de carrito después de confirmar que se guardó la orden
-                          console.log("Limpiando carrito después de compra exitosa...");
-                          console.log("Estado ANTES del vaciado:");
-                          console.log("cart:", localStorage.getItem("cart"));
-                          console.log("cart_selected:", localStorage.getItem("cart_selected"));
-                          console.log("cart_checkout:", localStorage.getItem("cart_checkout"));
-                          console.log("cartCount:", localStorage.getItem("cartCount"));
+                          // 3. Limpiar COMPLETAMENTE el carrito después de confirmar que se guardó la orden
+                          console.log("🧹 Iniciando limpieza completa del carrito...");
                           
-                          localStorage.removeItem("cart");
-                          localStorage.removeItem("cart_selected");
-                          localStorage.removeItem("cart_checkout");
-                          localStorage.setItem("cartCount", "0");
-                          
-                          console.log("Estado DESPUÉS del vaciado:");
-                          console.log("cart:", localStorage.getItem("cart"));
-                          console.log("cart_selected:", localStorage.getItem("cart_selected"));
-                          console.log("cart_checkout:", localStorage.getItem("cart_checkout"));
-                          console.log("cartCount:", localStorage.getItem("cartCount"));
-                          
-                          // Actualizar el contador del carrito en la UI si existe
-                          const cartCountElement = document.querySelector("#cart-count");
-                          if (cartCountElement) {
-                              cartCountElement.textContent = "(0)";
-                              console.log("🔄 Contador UI actualizado a (0)");
-                          } else {
-                              console.log("⚠️ No se encontró el elemento #cart-count");
-                          }
-                          
-                          // También buscar otras posibles formas del contador
-                          const alternativeCounters = document.querySelectorAll('[class*="cart"], [id*="cart"], [class*="count"], [id*="count"]');
-                          console.log("🔍 Elementos de carrito encontrados:", alternativeCounters.length);
-                          alternativeCounters.forEach((elem, index) => {
-                              console.log(`Elemento ${index}:`, elem.tagName, elem.className, elem.id, elem.textContent);
-                              if (elem.textContent && elem.textContent.includes("(")) {
-                                  elem.textContent = elem.textContent.replace(/\(\d+\)/, "(0)");
-                                  console.log(`🔄 Actualizado elemento ${index}`);
+                          // Limpiar TODAS las claves de localStorage relacionadas con el carrito
+                          const cartKeys = ['cart', 'cart_selected', 'cart_checkout', 'cartCount', 'cartItems', 'shopping_cart', 'user_cart'];
+                          cartKeys.forEach(key => {
+                              if (localStorage.getItem(key)) {
+                                  console.log(`Removiendo ${key}:`, localStorage.getItem(key));
+                                  localStorage.removeItem(key);
                               }
                           });
                           
-                          console.log("✅ Carrito limpiado exitosamente");
-                          console.log("Orden guardada exitosamente:", result);
+                          // Establecer contador en 0
+                          localStorage.setItem("cartCount", "0");
+                          
+                          // Actualizar TODOS los elementos posibles del contador en la UI
+                          const selectors = [
+                              '#cart-count', '.cart-count', '[data-cart-count]',
+                              '#cartCount', '.cartCount', '#cart_count', '.cart_count',
+                              '.badge', '.counter', '[class*="count"]', '[id*="count"]',
+                              'a[href*="cart"] span', 'a[href*="carrito"] span'
+                          ];
+                          
+                          let updated = false;
+                          selectors.forEach(selector => {
+                              const elements = document.querySelectorAll(selector);
+                              elements.forEach(elem => {
+                                  if (elem.textContent && (elem.textContent.includes('(') || /\d+/.test(elem.textContent))) {
+                                      console.log(`Actualizando elemento: ${selector} -> "${elem.textContent}" a "(0)"`);
+                                      elem.textContent = elem.textContent.replace(/\(\d+\)/, '(0)').replace(/^\d+$/, '0');
+                                      if (elem.textContent.includes('(') && !elem.textContent.includes('(0)')) {
+                                          elem.textContent = '(0)';
+                                      }
+                                      updated = true;
+                                  }
+                              });
+                          });
+                          
+                          // También disparar un evento personalizado para que otros scripts puedan reaccionar
+                          window.dispatchEvent(new CustomEvent('cartCleared', { detail: { success: true } }));
+                          
+                          // Si existe updateCartCount como función global, llamarla
+                          if (typeof window.updateCartCount === 'function') {
+                              window.updateCartCount(0);
+                          }
+                          
+                          console.log(`✅ Carrito completamente limpiado. UI actualizada: ${updated}`);
+                          console.log("✅ Orden guardada exitosamente:", result);
                       } else {
                           console.error("❌ Error al guardar la orden:", result.error);
                       }

@@ -39,6 +39,48 @@
          Volver al inicio
       </a>
     </div>
+
+    <script>
+        // Asegurar que el carrito esté completamente vacío al mostrar la página de éxito
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧹 Página de éxito cargada - Verificando limpieza del carrito...');
+            
+            // Limpiar COMPLETAMENTE el localStorage
+            const cartKeys = ['cart', 'cart_selected', 'cart_checkout', 'cartCount', 'cartItems', 'shopping_cart', 'user_cart'];
+            cartKeys.forEach(key => {
+                if (localStorage.getItem(key)) {
+                    console.log(`🗑️ Eliminando ${key}:`, localStorage.getItem(key));
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Establecer contador en 0
+            localStorage.setItem("cartCount", "0");
+            
+            // Actualizar cualquier contador visible en la página
+            const selectors = [
+                '#cart-count', '.cart-count', '[data-cart-count]',
+                '#cartCount', '.cartCount', '#cart_count', '.cart_count',
+                '.badge', '.counter', '[class*="count"]', '[id*="count"]',
+                'a[href*="cart"] span', 'a[href*="carrito"] span'
+            ];
+            
+            selectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(elem => {
+                    if (elem.textContent && /\d+/.test(elem.textContent)) {
+                        console.log(`🔄 Actualizando contador: ${selector} -> "(0)"`);
+                        elem.textContent = elem.textContent.replace(/\(\d+\)/, '(0)').replace(/^\d+$/, '0');
+                        if (!elem.textContent.includes('0')) {
+                            elem.textContent = '(0)';
+                        }
+                    }
+                });
+            });
+            
+            console.log('✅ Carrito completamente limpiado desde página de éxito');
+        });
+    </script>
 {% endblock %}
 
 
