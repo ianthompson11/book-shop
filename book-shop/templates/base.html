@@ -32,14 +32,14 @@
   </style>
 </head>
 
-<body {% block body_attributes %}class="bg-gray-50 p-10"{% endblock %}>
+<body {% block body_attributes %}class="bg-gray-50 p-10" data-authenticated="{{ user.is_authenticated }}"{% endblock %}>
     <header class="fixed top-0 left-0 w-full z-50 bg-blur text-gray-800 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
             
             <!-- Logo y navegación izquierda -->
             <div class="flex items-center space-x-6">
-                <a href="{% url 'home' %}" class="text-xl font-bold hover:text-indigo-300 transition">
+                <a href="/productos/" class="text-xl font-bold hover:text-indigo-300 transition">
                 Book Shop
                 </a>
                 
@@ -47,12 +47,12 @@
 
             <!-- Usuario autenticado o login -->
             <div class="flex items-center space-x-4">
-                <a href="/productos/" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+                <a href="/productos/" class="text-gray-700 hidden hover:text-blue-600 font-medium">Inicio</a>
                 {% if user.is_authenticated %}
                 <span class="hidden sm:inline text-sm">{% trans "Bienvenido" %} <strong>{{ user.username }}</strong></span>
                 <!-- Panel del usuario (dropdown) -->
                 <div class="relative group">
-                    <button class="flex items-center gap-1 text-sm font-medium hover:text-indigo-300 focus:outline-none">
+                    <button class="flex items-center hidden gap-1 text-sm font-medium hover:text-indigo-300 focus:outline-none">
                     Panel de Usuario
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />

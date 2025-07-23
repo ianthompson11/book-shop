@@ -136,8 +136,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Redirecciones
-LOGIN_REDIRECT_URL = '/home/'  # Redirige a la página principal tras login
-ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'  # Redirige a login tras logout
+LOGIN_REDIRECT_URL = '/productos/'  # Redirige a la página principal tras login
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # Redirige a login tras logout
 # Opciones de allauth
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Para pruebas localmente
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}

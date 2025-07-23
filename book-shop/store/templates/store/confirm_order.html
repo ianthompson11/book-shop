@@ -7,6 +7,7 @@
 {% block body_attributes %}
   class="bg-gray-100 font-sans" data-authenticated="{{ user.is_authenticated }}"
 {% endblock %}
+
 {% block content %}
     <!-- Incluye el menú de navegación superior -->
 
@@ -87,7 +88,7 @@
                 return;
             }
 
-            // 🔐 Aquí tu compañero puede leer el carrito desde localStorage en /checkout/
+           //Se guarda el carrito en el localStorage
             localStorage.setItem("cart_checkout", JSON.stringify(cart));
 
             // 🔁 Redirección a la ruta donde se integrará la pasarela PayPal

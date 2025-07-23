@@ -4,7 +4,7 @@
 <!-- Incluye menú de navegación -->
 {%block title%} Carrito de Compras {%endblock%}
 {% block body_attributes %}
-  class="bg-gray-50"
+  class="bg-gray-50" data-authenticated="{{ user.is_authenticated }}"
 {% endblock %}
 {% block content %}
 <div class="max-w-7xl mx-auto py-20 px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -159,8 +159,16 @@ function decreaseQty(index) {
 }
 
 document.getElementById("checkout-btn").addEventListener("click", function () {
+    const isAuthenticated = document.body.dataset.authenticated === "True";
+
+    if (!isAuthenticated) {
+        alert("Debes iniciar sesión para continuar con el pago.");
+        window.location.href = "/";  // o la ruta que tengas
+        return;
+    }
+
     window.location.href = "/final-confirm";
-  });
+});
 
 
 
