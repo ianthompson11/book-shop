@@ -8,7 +8,8 @@ from . import views
 urlpatterns = [
 
     # Ruta para mostrar los productos (vista principal de la tienda)
-    #path('products/', views.product_list, name='product_list'),
+    #
+    # path('products/', views.product_list, name='product_list'),
 
     # Ruta para confirmar el contenido del carrito
     path('confirm-order/', views.confirm_order, name='confirm_order'),

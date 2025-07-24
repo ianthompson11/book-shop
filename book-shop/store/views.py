@@ -10,9 +10,9 @@ import json  # Para decodificar el cuerpo de las peticiones JSON
 # -----------------------------------
 # Vista que muestra los productos
 # -----------------------------------
-def product_list(request):
-    products = Product.objects.all()  # Obtiene todos los productos de la base de datos
-    return render(request, 'productos/product_list.html', {'products': products})  # Los pasa al template para mostrarlos
+#def product_list(request):
+  #  products = Product.objects.all()  # Obtiene todos los productos de la base de datos
+  #  return render(request, 'productos/product_list.html', {'products': products})  # Los pasa al template para mostrarlos
 
 # -----------------------------------
 # Vista que muestra el resumen del carrito
