@@ -546,3 +546,22 @@ body {
     z-index: 900; /* Por encima del overlay si es necesario */
 }
 
+/* —— Colores de texto en los <input> —— */
+
+/* Campos del formulario principal (fondo oscuro)  */
+.formulario input {
+  color: #ffd700;      /* texto amarillo‑dorado            */
+  caret-color: #ffd700;/* color del cursor para coherencia  */
+}
+
+/* Placeholder en amarillo suave para que también se vea */
+.formulario input::placeholder {
+  color: #ffeb7a;
+}
+
+/* Si usas los estilos claritos (.input‑field / .input‑rounded)
+   mantenemos el texto oscuro para que contraste con su fondo claro */
+.input-field,
+.input-rounded {
+  color: #222;
+}
